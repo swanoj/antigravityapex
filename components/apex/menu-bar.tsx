@@ -32,30 +32,24 @@ export function MenuBar({ focusedTitle, onOpenSearch }: Props) {
 
   return (
     <div
-      className="absolute inset-x-0 top-0 z-[200] flex h-10 items-center gap-4 apex-chrome-glass px-4 text-[11px] text-white/85 shadow-lg"
+      className="absolute inset-x-0 top-0 z-[200] flex h-10 items-center justify-between apex-chrome-glass px-6 text-[10px] text-white/85 shadow-lg border-b border-white/5"
     >
       {/* Left — logo + menu */}
-      <div className="flex items-center gap-4">
-        <div className="flex items-center gap-1.5">
-          <span
-            className="inline-block h-2.5 w-2.5 rounded-sm"
-            style={{
-              background:
-                "linear-gradient(135deg, #00F0FF 0%, #3B82F6 60%, #FF6B00 130%)",
-              boxShadow: "0 0 10px rgba(0,240,255,0.6)",
-            }}
-            aria-hidden
-          />
-          <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.22em] text-white">
-            ANTIGRAVITY
-          </span>
+      <div className="flex items-center gap-6 overflow-hidden">
+        <div className="flex items-center gap-2 shrink-0">
+          <div className="relative">
+             <div className="w-1.5 h-1.5 bg-red-600 rounded-full animate-pulse absolute -left-3 top-1/2 -translate-y-1/2" />
+             <span className="font-mono text-[10px] font-black uppercase tracking-[0.4em] text-white">
+               APEX_PRIMARY
+             </span>
+          </div>
         </div>
-        <nav className="hidden items-center gap-1 md:flex">
+        <nav className="hidden items-center gap-4 border-l border-white/10 pl-6 md:flex">
           {MENU_ITEMS.map((item) => (
             <button
               key={item}
               type="button"
-              className="rounded px-2 py-0.5 text-white/70 transition hover:bg-white/[0.06] hover:text-white"
+              className="font-mono uppercase tracking-widest text-white/40 transition hover:text-white"
             >
               {item}
             </button>
@@ -63,48 +57,55 @@ export function MenuBar({ focusedTitle, onOpenSearch }: Props) {
         </nav>
       </div>
 
-      {/* Center — focused window title */}
-      <div className="pointer-events-none absolute left-1/2 hidden -translate-x-1/2 items-center gap-2 md:flex">
-        <span className="inline-block h-1.5 w-1.5 rounded-full bg-[#00F0FF] shadow-[0_0_6px_#00F0FF]" />
-        <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-white/80">
-          {focusedTitle}
-        </span>
+      {/* Center — Broadcast Ticker */}
+      <div className="flex-1 max-w-xl mx-8 overflow-hidden relative hidden lg:flex items-center gap-4 bg-black/20 h-6 px-4 rounded-sm border border-white/5">
+         <span className="font-mono text-[9px] font-bold text-emerald-500 shrink-0">LIVE_TICKER:</span>
+         <div className="flex gap-12 animate-marquee whitespace-nowrap font-mono text-[9px] text-white/40 tracking-[0.2em]">
+            <span>$APEX_CORE +14.2%</span>
+            <span>UPLINK_STABLE // SINGAPORE_NODE_ACTIVE</span>
+            <span>ROI_INDEX // 14X_TARGET_LOCKED</span>
+            <span>$DOMINANCE_INDEX +2.4%</span>
+            <span>SYSTEM_PULSE // NOMINAL</span>
+            <span>$APEX_CORE +14.2%</span>
+            <span>UPLINK_STABLE // SINGAPORE_NODE_ACTIVE</span>
+         </div>
       </div>
 
       {/* Right — system tray */}
-      <div className="ml-auto flex items-center gap-3 text-white/70">
+      <div className="flex items-center gap-4 text-white/70">
+        <div className="hidden xl:flex items-center gap-2 border-r border-white/10 pr-4 mr-2">
+           <span className="font-mono text-[9px] text-white/30 uppercase tracking-widest">Focused:</span>
+           <span className="font-mono text-[10px] text-white font-bold uppercase truncate max-w-[120px]">{focusedTitle}</span>
+        </div>
+
         <button
           type="button"
           onClick={onOpenSearch}
-          aria-label="Open global search"
-          className="hidden items-center gap-1.5 rounded px-2 py-0.5 transition hover:bg-white/[0.06] hover:text-white md:flex"
+          className="flex items-center gap-2 rounded bg-white/5 border border-white/10 px-2 py-1 transition hover:bg-white/10"
         >
-          <Search className="h-3.5 w-3.5" />
-          <kbd className="font-mono text-[10px] uppercase tracking-widest text-white/50">
-            ⌘K
-          </kbd>
+          <Search className="h-3 w-3" />
+          <kbd className="font-mono text-[9px] text-white/40">⌘K</kbd>
         </button>
-        <Bluetooth className="hidden h-3.5 w-3.5 md:block" aria-hidden />
-        <Wifi className="h-3.5 w-3.5" aria-hidden />
-        <Battery className="hidden h-4 w-4 md:block" aria-hidden />
-        <span className="hidden font-mono text-[11px] tracking-widest text-white/60 md:inline">
-          {date}
-        </span>
-        <span className="font-mono text-[11px] tracking-widest text-white">
-          {time}
-        </span>
-        <div
-          className="ml-1 flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-semibold"
-          style={{
-            background:
-              "linear-gradient(135deg, #00F0FF 0%, #3B82F6 60%, #FF6B00 130%)",
-            color: "#0a0a0a",
-          }}
-          aria-label="User"
-        >
-          A
+        
+        <div className="hidden md:flex items-center gap-3 ml-2">
+           <Wifi className="h-3 w-3" />
+           <Battery className="h-3.5 w-3.5" />
+           <span className="font-mono text-[10px] tracking-tighter text-white">{time}</span>
         </div>
+
+        <div className="ml-2 w-5 h-5 flex items-center justify-center bg-white text-black font-black text-[10px]">A</div>
       </div>
+
+      <style jsx>{`
+        @keyframes marquee {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        .animate-marquee {
+          display: flex;
+          animation: marquee 30s linear infinite;
+        }
+      `}</style>
     </div>
   )
 }

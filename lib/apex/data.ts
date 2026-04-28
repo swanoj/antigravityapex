@@ -126,7 +126,7 @@ export const APEX_PROJECTS = [
     metric: "+312% revenue",
     summary: "Re-platformed to Shopify Plus, scaled paid social to 8-figures.",
     accent: "#00F0FF",
-    image: "/placeholder.jpg",
+    image: "/Users/oliver/.gemini/antigravity/brain/48d44517-e1eb-4cbc-8308-a840c01874f2/atlas_athletics_hero_1777363288546.png",
     span: "col-span-2 row-span-2",
   },
   {
@@ -136,7 +136,7 @@ export const APEX_PROJECTS = [
     metric: "0 → $2.4M ARR",
     summary: "Designed, built and launched the entire product surface in 9 weeks.",
     accent: "#3B82F6",
-    image: "/placeholder.jpg",
+    image: "/Users/oliver/.gemini/antigravity/brain/48d44517-e1eb-4cbc-8308-a840c01874f2/voltron_ai_hero_1777363301739.png",
     span: "col-span-2 row-span-1",
   },
   {
@@ -146,7 +146,7 @@ export const APEX_PROJECTS = [
     metric: "47M views",
     summary: "Cinematic launch film + 60-asset performance creative system.",
     accent: "#FF6B00",
-    image: "/placeholder.jpg",
+    image: "/Users/oliver/.gemini/antigravity/brain/48d44517-e1eb-4cbc-8308-a840c01874f2/noir_studio_hero_1777363320991.png",
     span: "col-span-1 row-span-1",
   },
   {
@@ -156,7 +156,7 @@ export const APEX_PROJECTS = [
     metric: "−42% CAC",
     summary: "Rebuilt funnel + server-side tracking, unlocked profitable scale.",
     accent: "#00F0FF",
-    image: "/placeholder.jpg",
+    image: "/Users/oliver/.gemini/antigravity/brain/48d44517-e1eb-4cbc-8308-a840c01874f2/helix_health_hero_1777363356223.png",
     span: "col-span-1 row-span-1",
   },
   {
@@ -166,7 +166,7 @@ export const APEX_PROJECTS = [
     metric: "9× lead volume",
     summary: "Editorial site + LLM-powered research assistant for analysts.",
     accent: "#3B82F6",
-    image: "/placeholder.jpg",
+    image: "/Users/oliver/.gemini/antigravity/brain/48d44517-e1eb-4cbc-8308-a840c01874f2/northwind_capital_hero_1777363375266.png",
     span: "col-span-2 row-span-2",
   },
   {
@@ -176,7 +176,7 @@ export const APEX_PROJECTS = [
     metric: "4.8 ROAS",
     summary: "High-velocity creative engine + full-funnel Meta + Google.",
     accent: "#FF6B00",
-    image: "/placeholder.jpg",
+    image: "/Users/oliver/.gemini/antigravity/brain/48d44517-e1eb-4cbc-8308-a840c01874f2/kinetic_apparel_hero_1777363393495.png",
     span: "col-span-2 row-span-1",
   },
 ] as const

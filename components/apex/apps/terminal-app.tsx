@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react"
 import type { AppId } from "@/lib/apex/apps"
 import { APPS } from "@/lib/apex/apps"
 import { APEX_STATS } from "@/lib/apex/data"
+import { cn } from "@/lib/utils"
 
 type Line =
   | { kind: "out"; text: string; tone?: "default" | "cyan" | "orange" | "muted" | "ok" | "err" }
@@ -44,6 +45,19 @@ export function TerminalApp({ onCommand, openWindowsTitles }: Props) {
   const [history, setHistory] = useState<string[]>([])
   const [hIdx, setHIdx] = useState<number | null>(null)
   const [busy, setBusy] = useState(false)
+  
+  // Real-time uplink to system audio
+  const [audioState, setAudioState] = useState("IDLE")
+  const [location, setLocation] = useState("LOC_UNKNOWN")
+
+  useEffect(() => {
+    try {
+      const loc = new Intl.DateTimeFormat('en-US', { timeZoneName: 'short' }).format(new Date()).split(' ').pop() || "UTC"
+      setLocation(loc)
+    } catch (e) {
+      setLocation("UTC")
+    }
+  }, [])
   const scrollRef = useRef<HTMLDivElement | null>(null)
   const inputRef = useRef<HTMLInputElement | null>(null)
 
@@ -231,34 +245,39 @@ export function TerminalApp({ onCommand, openWindowsTitles }: Props) {
 
   return (
     <div
-      className="relative h-full bg-[#040608] font-mono text-[12px] leading-relaxed text-[#aef9ff]"
+      className="relative h-full bg-[#050505] font-mono text-[11px] leading-snug text-white/90 selection:bg-white/20"
       onClick={() => inputRef.current?.focus()}
     >
-      <div className="apex-scanline-anim opacity-50" aria-hidden />
+      {/* Hardware Overlays */}
+      <div className="absolute inset-0 pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.05] z-0" />
+      <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.1)_50%),linear-gradient(90deg,rgba(255,0,0,0.03),rgba(0,255,0,0.01),rgba(0,0,255,0.03))] bg-[length:100%_2px,3px_100%] z-0" />
+
       <div
-        className="apex-scroll relative h-full overflow-y-auto px-4 py-3"
+        className="apex-scroll relative h-full overflow-y-auto px-6 py-6 z-10"
         ref={scrollRef}
+        style={{ textShadow: "0 0 5px rgba(255,255,255,0.2)" }}
       >
         {lines.map((l, i) => (
-          <div key={i} className="whitespace-pre-wrap break-words">
+          <div key={i} className="mb-1 whitespace-pre-wrap break-words">
             {l.kind === "in" ? (
-              <div>
-                <span className="text-[color:var(--apex-cyan)]">apex@matrix</span>
-                <span className="text-white/40">:~$ </span>
-                <span className="text-white">{l.text}</span>
+              <div className="flex items-center gap-2">
+                <span className="text-white/20 select-none">›</span>
+                <span className="text-white font-bold">{l.text}</span>
               </div>
             ) : l.kind === "out" ? (
-              <div className={toneClass(l.tone)}>{l.text}</div>
+              <div className={cn("pl-4 border-l border-white/5", toneClass(l.tone))}>
+                {l.text}
+              </div>
             ) : (
-              <div>{l.node}</div>
+              <div className="pl-4">{l.node}</div>
             )}
           </div>
         ))}
 
         {/* prompt */}
-        <div className="flex items-center">
-          <span className="text-[color:var(--apex-cyan)]">apex@matrix</span>
-          <span className="text-white/40">:~$&nbsp;</span>
+        <div className="flex items-center gap-2 mt-4">
+          <span className="text-emerald-500 animate-pulse select-none">●</span>
+          <span className="text-white/20 select-none">›</span>
           <input
             ref={inputRef}
             value={input}
@@ -270,10 +289,9 @@ export function TerminalApp({ onCommand, openWindowsTitles }: Props) {
             autoCapitalize="off"
             autoCorrect="off"
             aria-label="Terminal input"
-            className="flex-1 border-0 bg-transparent p-0 font-mono text-[12px] text-white outline-none placeholder:text-white/20"
-            placeholder={busy ? "…" : 'type "help"'}
+            className="flex-1 border-0 bg-transparent p-0 font-mono text-[11px] text-white outline-none placeholder:text-white/10 tracking-widest"
+            placeholder={busy ? "PROCESSING..." : "ENTER_COMMAND"}
           />
-          <span className="apex-cursor-blink ml-0.5 inline-block h-3 w-1.5 bg-[color:var(--apex-cyan)]" />
         </div>
       </div>
     </div>
@@ -283,15 +301,15 @@ export function TerminalApp({ onCommand, openWindowsTitles }: Props) {
 function toneClass(tone?: "default" | "cyan" | "orange" | "muted" | "ok" | "err") {
   switch (tone) {
     case "cyan":
-      return "text-[color:var(--apex-cyan)]"
+      return "text-cyan-400 font-bold tracking-widest"
     case "orange":
-      return "text-[color:var(--apex-orange)]"
+      return "text-orange-400 font-bold"
     case "muted":
-      return "text-white/40"
+      return "text-white/30 italic"
     case "ok":
       return "text-emerald-400"
     case "err":
-      return "text-rose-400"
+      return "text-rose-500 font-bold animate-pulse"
     default:
       return "text-white/80"
   }
@@ -299,15 +317,33 @@ function toneClass(tone?: "default" | "cyan" | "orange" | "muted" | "ok" | "err"
 
 function banner(): Line[] {
   return [
-    { kind: "out", text: "APEX MATRIX v4.0 — secure terminal", tone: "cyan" },
-    { kind: "out", text: "© 2026 APEX Digital · all rights reserved.", tone: "muted" },
-    { kind: "out", text: "" },
-    {
-      kind: "out",
-      text: 'type "help" for commands. try: open services, stats, launch campaign.',
-      tone: "muted",
+    { kind: "out", text: " " },
+    { 
+      kind: "block", 
+      node: (
+        <div className="font-black text-[10px] leading-tight text-white mb-4">
+          <div>█████╗ ██████╗ ███████╗██╗  ██╗</div>
+          <div>██╔══██╗██╔══██╗██╔════╝╚██╗██╔╝</div>
+          <div>███████║██████╔╝█████╗   ╚███╔╝ </div>
+          <div>██╔══██║██╔═══╝ ██╔══╝   ██╔██╗ </div>
+          <div>██║  ██║██║     ███████╗██╔╝ ██╗</div>
+          <div>╚═╝  ╚═╝╚═╝     ╚══════╝╚═╝  ╚═╝</div>
+        </div>
+      )
     },
-    { kind: "out", text: "" },
+    { kind: "out", text: "KERNEL_UPLINK_09 // STABLE", tone: "cyan" },
+    { kind: "out", text: "SESSION_AUTH: OPERATOR_LEVEL_4", tone: "muted" },
+    { kind: "out", text: " " },
+    { 
+      kind: "block", 
+      node: (
+        <div className="flex gap-4 border-y border-white/5 py-2 my-2 font-mono text-[9px] uppercase tracking-widest text-white/40 overflow-hidden">
+          <span className="text-cyan-400">AUDIO: CONNECTED</span>
+          <span className="animate-pulse">SIGNAL: OPTIMAL</span>
+          <span>LOCATION: {location}</span>
+        </div>
+      )
+    },
   ]
 }
 

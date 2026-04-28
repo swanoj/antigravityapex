@@ -1,168 +1,106 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { Play, Film, Camera, Scissors, Music2 } from "lucide-react"
+import { Play, Film, Camera, Radio, Activity, Disc, Target } from "lucide-react"
 import { useState } from "react"
 
-const REELS = [
-  { id: "brand", label: "Brand Film", duration: "01:42", accent: "#00F0FF" },
-  { id: "dtc", label: "DTC Performance", duration: "00:18", accent: "#3B82F6" },
-  { id: "product", label: "Product Cinema", duration: "00:45", accent: "#FF6B00" },
-  { id: "studio", label: "Studio Reel", duration: "02:03", accent: "#00F0FF" },
+const CHANNEL_STATS = [
+  { label: "Signal", value: "98.4%", icon: Radio },
+  { label: "Bitrate", value: "1.2 GB/s", icon: Activity },
+  { label: "Latency", value: "4ms", icon: Disc },
 ]
 
 export function VideoApp() {
-  const [active, setActive] = useState(REELS[0])
+  const [isLive, setIsLive] = useState(true)
 
   return (
-    <div className="px-6 py-6">
-      <div className="mb-5 flex items-end justify-between gap-4">
+    <div className="bg-black h-full flex flex-col overflow-hidden text-white font-sans relative">
+      {/* Newspaper Blend Header */}
+      <div className="bg-white px-6 py-4 flex justify-between items-center border-b border-black">
         <div>
-          <span className="font-mono text-[10px] uppercase tracking-[0.32em] text-[color:var(--apex-orange)]">
-            // video lab · cinematic production
-          </span>
-          <h2 className="mt-2 text-balance text-2xl font-semibold tracking-tight">
-            Story, system and signal — all on one set.
+          <h2 className="text-4xl font-bold tracking-tighter text-black uppercase leading-none">
+            Broadcast <span className="text-zinc-300 italic">Antigravity</span>
           </h2>
-          <p className="mt-1.5 max-w-xl text-sm leading-relaxed text-white/60">
-            Our in-house studio shoots brand films, performance creative and
-            product cinema in a single block — then our editing engine turns it
-            into hundreds of platform-native, on-brand assets.
-          </p>
+          <div className="flex gap-4 mt-1 font-mono text-[9px] uppercase tracking-widest text-black/40">
+             <span>Station 4.82 // TOKYO-SEOUL-NYC</span>
+             <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-red-600 animate-pulse"/> LIVE FEED</span>
+          </div>
+        </div>
+        <div className="hidden md:flex gap-8">
+           {CHANNEL_STATS.map(s => (
+             <div key={s.label} className="flex flex-col items-end">
+                <span className="font-mono text-[8px] text-black/30 uppercase tracking-widest">{s.label}</span>
+                <span className="text-xs font-bold text-black">{s.value}</span>
+             </div>
+           ))}
         </div>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-[1.6fr_1fr]">
-        {/* Player */}
-        <motion.div
-          key={active.id}
-          initial={{ opacity: 0.6, scale: 0.99 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.35 }}
-          className="relative overflow-hidden rounded-xl border border-white/10 bg-black"
-          style={{
-            aspectRatio: "16 / 9",
-            boxShadow: `0 0 0 1px ${active.accent}33, 0 0 60px -20px ${active.accent}66`,
-          }}
-        >
-          {/* mock film background */}
-          <div
-            className="absolute inset-0"
-            style={{
-              background: `radial-gradient(ellipse at 30% 30%, ${active.accent}33, transparent 60%), radial-gradient(ellipse at 70% 80%, ${active.accent}22, transparent 60%), linear-gradient(180deg, #050505, #111)`,
-            }}
-            aria-hidden
-          />
-          <div className="absolute inset-0 apex-grid-fine opacity-30" aria-hidden />
-          <div className="apex-scanline-anim opacity-50" aria-hidden />
+      {/* Main Broadcast Monitor */}
+      <div className="flex-1 relative bg-[#0a0a0a] overflow-hidden group">
+         {/* Youtube Player Placeholder / Embed */}
+         <div className="absolute inset-0 z-0">
+           <iframe 
+             className="w-full h-full opacity-80"
+             src="https://www.youtube.com/embed/jfKfPfyJRdk?autoplay=1&mute=1&controls=0&loop=1&playlist=jfKfPfyJRdk" 
+             title="YouTube video player" 
+             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+           />
+           {/* CRT Glitch Overlay */}
+           <div className="absolute inset-0 pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.05] contrast-150" />
+           <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.1)_50%),linear-gradient(90deg,rgba(255,0,0,0.03),rgba(0,255,0,0.01),rgba(0,0,255,0.03))] bg-[length:100%_2px,3px_100%]" />
+         </div>
 
-          {/* center play */}
-          <div className="absolute inset-0 flex items-center justify-center">
-            <button
-              type="button"
-              className="group relative flex h-16 w-16 items-center justify-center rounded-full border border-white/20 bg-black/40 backdrop-blur transition hover:scale-110"
-              style={{
-                boxShadow: `0 0 0 1px ${active.accent}55, 0 0 40px -4px ${active.accent}88`,
-              }}
-              aria-label={`Play ${active.label}`}
-            >
-              <Play
-                className="h-6 w-6 translate-x-0.5 fill-white text-white"
-                aria-hidden
-              />
-              <span
-                className="pointer-events-none absolute inset-0 rounded-full opacity-0 transition group-hover:opacity-100"
-                style={{
-                  boxShadow: `0 0 0 6px ${active.accent}22`,
-                }}
-              />
+         {/* Monitor Chrome - Technical Overlay */}
+         <div className="absolute inset-0 p-6 flex flex-col justify-between pointer-events-none border-[12px] border-black/20">
+            <div className="flex justify-between items-start">
+               <div className="bg-black/60 backdrop-blur-sm border border-white/10 px-3 py-1.5 rounded flex items-center gap-3">
+                  <div className="w-2 h-2 rounded-full bg-red-600 animate-pulse" />
+                  <span className="font-mono text-[10px] font-bold tracking-widest text-white/90">TRANSMITTING... [4K_UHD]</span>
+               </div>
+               <div className="font-mono text-[10px] text-white/40 flex flex-col items-end">
+                  <span>LAT: 35.6762° N</span>
+                  <span>LNG: 139.6503° E</span>
+               </div>
+            </div>
+
+            <div className="flex justify-between items-end">
+               <div className="flex gap-4">
+                  <div className="w-16 h-1 w-full bg-white/10 rounded-full overflow-hidden">
+                     <motion.div 
+                        initial={{ width: "30%" }} 
+                        animate={{ width: "90%" }} 
+                        transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+                        className="h-full bg-red-600" 
+                     />
+                  </div>
+                  <span className="font-mono text-[9px] text-white/60">BUFF_SYNCED</span>
+               </div>
+               <div className="flex flex-col items-end">
+                  <div className="text-4xl font-black italic tracking-tighter opacity-10">APEX_CORE</div>
+                  <div className="font-mono text-[10px] text-red-600 font-bold">SIGNAL_LOCKED</div>
+               </div>
+            </div>
+         </div>
+      </div>
+
+      {/* Control Strip */}
+      <div className="h-14 bg-white border-t border-black px-6 flex items-center justify-between">
+         <div className="flex gap-8 items-center">
+            <button className="text-black hover:text-red-600 transition-colors">
+               <Play size={18} fill="currentColor" />
             </button>
-          </div>
-
-          {/* HUD overlay */}
-          <div className="absolute inset-x-0 top-0 flex items-center justify-between p-3 font-mono text-[10px] uppercase tracking-[0.22em] text-white/70">
-            <span className="flex items-center gap-1.5">
-              <span
-                className="inline-block h-1.5 w-1.5 rounded-full apex-pulse"
-                style={{ background: active.accent }}
-              />
-              REC · {active.label}
-            </span>
-            <span>tc · 00:00:{active.duration}</span>
-          </div>
-
-          <div className="absolute inset-x-0 bottom-0 flex items-center justify-between p-3 font-mono text-[10px] uppercase tracking-[0.22em] text-white/70">
-            <span>apex · studio prime</span>
-            <span style={{ color: active.accent }}>4k · 60fps · log-c</span>
-          </div>
-        </motion.div>
-
-        {/* Reels list */}
-        <div className="space-y-2">
-          <div className="font-mono text-[10px] uppercase tracking-[0.32em] text-white/40">
-            // selected reels
-          </div>
-          {REELS.map((r) => {
-            const isActive = active.id === r.id
-            return (
-              <button
-                key={r.id}
-                type="button"
-                onClick={() => setActive(r)}
-                className="group flex w-full items-center gap-3 rounded-lg border border-white/5 bg-white/[0.02] p-3 text-left transition hover:border-white/15 hover:bg-white/[0.04]"
-                style={
-                  isActive
-                    ? {
-                        borderColor: `${r.accent}55`,
-                        background: `${r.accent}10`,
-                      }
-                    : undefined
-                }
-              >
-                <span
-                  className="flex h-9 w-9 items-center justify-center rounded-md border border-white/10 bg-black/40"
-                  style={{ color: r.accent }}
-                >
-                  <Film className="h-4 w-4" aria-hidden />
-                </span>
-                <span className="flex-1">
-                  <span className="block text-sm font-medium text-white">
-                    {r.label}
-                  </span>
-                  <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-white/40">
-                    duration · {r.duration}
-                  </span>
-                </span>
-                <span
-                  className="font-mono text-[10px] uppercase tracking-[0.22em]"
-                  style={{ color: isActive ? r.accent : "rgba(255,255,255,0.4)" }}
-                >
-                  {isActive ? "now playing" : "play"}
-                </span>
-              </button>
-            )
-          })}
-        </div>
-      </div>
-
-      {/* capability strip */}
-      <div className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-4">
-        {[
-          { icon: Camera, label: "Direction" },
-          { icon: Film, label: "Cinematography" },
-          { icon: Scissors, label: "Editing" },
-          { icon: Music2, label: "Sound Design" },
-        ].map((c) => (
-          <div
-            key={c.label}
-            className="flex items-center gap-2 rounded-lg border border-white/5 bg-white/[0.02] p-3"
-          >
-            <span className="flex h-8 w-8 items-center justify-center rounded-md border border-[color:var(--apex-orange)]/30 text-[color:var(--apex-orange)]">
-              <c.icon className="h-3.5 w-3.5" aria-hidden />
-            </span>
-            <span className="text-xs font-medium text-white">{c.label}</span>
-          </div>
-        ))}
+            <div className="flex gap-4 font-mono text-[9px] uppercase tracking-widest text-black/60 overflow-hidden whitespace-nowrap mask-fade-right">
+               <span>// ARCHIVE_001.mp4</span>
+               <span>// LIVE_UPLINK_PRIMARY</span>
+               <span>// FEED_SECURED</span>
+            </div>
+         </div>
+         <div className="flex items-center gap-4">
+            <div className="text-black font-bold text-xs font-mono">00:34:12:09</div>
+            <div className="w-[1px] h-4 bg-black/10" />
+            <Target size={16} className="text-black/20" />
+         </div>
       </div>
     </div>
   )

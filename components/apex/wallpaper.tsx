@@ -1,69 +1,62 @@
 "use client"
 
+import { motion } from "framer-motion"
+
 export function Wallpaper() {
   return (
-    <div className="absolute inset-0 -z-0 overflow-hidden bg-[#070708]" aria-hidden>
-      {/* base radial */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(ellipse 80% 60% at 20% 10%, rgba(0,240,255,0.12), transparent 60%), radial-gradient(ellipse 90% 70% at 85% 95%, rgba(59,130,246,0.10), transparent 60%), radial-gradient(ellipse 60% 40% at 50% 50%, rgba(255,107,0,0.05), transparent 70%)",
+    <div className="absolute inset-0 -z-0 overflow-hidden bg-[#0a0a0b]" aria-hidden>
+      {/* Vertical Data Beam */}
+      <motion.div 
+        animate={{ 
+          x: ["-100%", "200%"],
         }}
+        transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+        className="absolute inset-y-0 w-[40vw] bg-gradient-to-r from-transparent via-white/[0.03] to-transparent skew-x-[-20deg]"
       />
-      {/* grid */}
-      <div className="absolute inset-0 apex-grid-bg opacity-70" />
 
-      {/* faint APEX wordmark */}
-      <div className="absolute inset-0 flex items-center justify-center">
-        <span
-          className="select-none font-mono text-[18vw] font-black uppercase tracking-[0.06em] leading-none"
-          style={{
-            color: "transparent",
-            WebkitTextStroke: "1px rgba(0,240,255,0.07)",
-            textShadow: "0 0 60px rgba(0,240,255,0.05)",
-          }}
-        >
-          APEX
-        </span>
+      {/* Industrial Grid */}
+      <div className="absolute inset-0 opacity-[0.15]" 
+           style={{ 
+             backgroundImage: 'linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px)', 
+             backgroundSize: '60px 60px' 
+           }} 
+      />
+      
+      {/* Massive Background Type - Minimalist */}
+      <div className="absolute inset-0 flex items-center justify-center opacity-[0.03] select-none pointer-events-none">
+        <h1 className="text-[40vw] font-black tracking-tighter leading-none text-white mix-blend-overlay">
+           APEX
+        </h1>
       </div>
 
-      {/* corner brackets */}
-      <Bracket position="top-left" />
-      <Bracket position="top-right" />
-      <Bracket position="bottom-left" />
-      <Bracket position="bottom-right" />
-
-      {/* terminal-style coordinate strip */}
-      <div className="absolute bottom-3 left-1/2 hidden -translate-x-1/2 items-center gap-3 rounded-full border border-white/5 bg-black/30 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.22em] text-white/30 backdrop-blur md:flex">
-        <span className="h-1 w-1 rounded-full bg-[#00F0FF]" />
-        <span>node · apex-prime</span>
-        <span className="h-3 w-px bg-white/10" />
-        <span>uptime · ∞</span>
-        <span className="h-3 w-px bg-white/10" />
-        <span>signal · stable</span>
+      {/* Technical Hub - Bottom Left */}
+      <div className="absolute bottom-12 left-12 flex gap-16 font-mono text-[10px] uppercase tracking-[0.3em] text-white/30">
+         <div className="flex flex-col gap-2 border-l border-white/10 pl-4">
+            <span className="text-white/80 font-bold tracking-widest">DRIVE_UNIT_01</span>
+            <div className="flex gap-1 h-1 w-20 bg-white/5 rounded-full overflow-hidden">
+               <motion.div 
+                  animate={{ width: ["20%", "85%", "20%"] }}
+                  transition={{ duration: 4, repeat: Infinity }}
+                  className="h-full bg-cyan-500/50" 
+               />
+            </div>
+         </div>
+         <div className="flex flex-col gap-2 border-l border-white/10 pl-4">
+            <span className="text-white/80 font-bold tracking-widest">SIGNAL_UPLINK</span>
+            <span className="flex items-center gap-2">
+               <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-ping" />
+               SECURE_CONNECTION
+            </span>
+         </div>
       </div>
 
-      <div className="apex-noise absolute inset-0" />
+      {/* Perimeter Brackets */}
+      <div className="absolute inset-8 border border-white/5 pointer-events-none">
+         <div className="absolute top-0 left-0 w-8 h-[1px] bg-white/20" />
+         <div className="absolute top-0 left-0 w-[1px] h-8 bg-white/20" />
+         <div className="absolute bottom-0 right-0 w-8 h-[1px] bg-white/20" />
+         <div className="absolute bottom-0 right-0 w-[1px] h-8 bg-white/20" />
+      </div>
     </div>
-  )
-}
-
-function Bracket({
-  position,
-}: {
-  position: "top-left" | "top-right" | "bottom-left" | "bottom-right"
-}) {
-  const map: Record<typeof position, string> = {
-    "top-left": "top-10 left-4 border-l border-t",
-    "top-right": "top-10 right-4 border-r border-t",
-    "bottom-left": "bottom-20 left-4 border-l border-b",
-    "bottom-right": "bottom-20 right-4 border-r border-b",
-  }
-  return (
-    <span
-      className={`pointer-events-none absolute hidden h-8 w-8 border-[color:var(--apex-cyan)]/40 md:block ${map[position]}`}
-      aria-hidden
-    />
   )
 }

@@ -99,7 +99,7 @@ export function Window({
       aria-hidden={false}
     >
       <motion.div
-        initial={{ opacity: 0, scale: 0.98, y: 20 }}
+        initial={{ opacity: 0, scale: 0.9, y: 40, filter: "brightness(2) contrast(1.5)" }}
         animate={{
           opacity: 1,
           scale: 1,
@@ -109,9 +109,16 @@ export function Window({
           height: h,
           top: y,
           left: 0,
+          filter: "brightness(1) contrast(1)",
         }}
-        exit={{ opacity: 0, scale: 0.98, y: 10 }}
-        transition={{ type: "spring", stiffness: 400, damping: 40, mass: 1 }}
+        exit={{ opacity: 0, scale: 0.95, y: 20, filter: "brightness(0)" }}
+        transition={{ 
+          type: "spring", 
+          stiffness: 500, 
+          damping: 30, 
+          mass: 0.8,
+          filter: { duration: 0.2 } 
+        }}
         drag={!isMax && !resizing}
         dragControls={dragControls}
         dragListener={false}
@@ -134,10 +141,13 @@ export function Window({
           zIndex: state.zIndex,
         }}
         className={cn(
-          "pointer-events-auto absolute apex-editorial-window overflow-hidden border border-black/[0.03]",
-          "flex flex-col",
-          isDarkApp ? "bg-black text-white" : "bg-white text-black",
-          isFocused ? "z-[100]" : "z-[10]"
+          "pointer-events-auto absolute apex-editorial-window overflow-hidden border border-black/10",
+          "flex flex-col shadow-2xl transition-shadow",
+          isDarkApp ? "bg-black text-white shadow-red-900/10" : "bg-white text-black shadow-zinc-900/20",
+          isFocused ? "z-[100]" : "z-[10]",
+          // Chromatic aberration feel
+          "before:content-[''] before:absolute before:inset-[-1px] before:border before:border-red-500/5 before:pointer-events-none before:z-0",
+          "after:content-[''] after:absolute after:inset-[-2px] after:border after:border-blue-500/5 after:pointer-events-none after:z-0"
         )}
       >
         {/* Title bar — Editorial Style */}
@@ -148,43 +158,40 @@ export function Window({
           }}
           onDoubleClick={onToggleMaximize}
           className={cn(
-            "relative flex h-12 shrink-0 items-center justify-between border-b px-4 select-none",
+            "relative flex h-12 shrink-0 items-center justify-between border-b px-6 select-none z-10",
             isMax ? "cursor-default" : "cursor-grab active:cursor-grabbing",
             isDarkApp ? "border-white/10 bg-zinc-900" : "border-black/5 bg-zinc-50/50"
           )}
         >
           {/* Traffic lights */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2.5">
             <button
               type="button"
               onPointerDown={(e) => e.stopPropagation()}
               onClick={onClose}
-              aria-label="Close window"
-              className="h-3 w-3 rounded-full border border-black/5 bg-[#ff5f57] transition hover:brightness-110"
+              className="h-2.5 w-2.5 rounded-full bg-[#ff5f57] border border-black/10"
             />
             <button
               type="button"
               onPointerDown={(e) => e.stopPropagation()}
               onClick={onMinimize}
-              aria-label="Minimize window"
-              className="h-3 w-3 rounded-full border border-black/5 bg-[#febc2e] transition hover:brightness-110"
+              className="h-2.5 w-2.5 rounded-full bg-[#febc2e] border border-black/10"
             />
             <button
               type="button"
               onPointerDown={(e) => e.stopPropagation()}
               onClick={onToggleMaximize}
-              aria-label="Maximize window"
-              className="h-3 w-3 rounded-full border border-black/5 bg-[#28c840] transition hover:brightness-110"
+              className="h-2.5 w-2.5 rounded-full bg-[#28c840] border border-black/10"
             />
           </div>
 
           {/* Title - Centered & Bolt */}
-          <div className="pointer-events-none absolute left-1/2 -translate-x-1/2 flex items-center gap-3">
-             <span className="font-mono text-[9px] uppercase tracking-[0.4em] text-muted-foreground/60">
-              {state.id}
+          <div className="pointer-events-none absolute left-1/2 -translate-x-1/2 flex items-center gap-4">
+             <span className="font-mono text-[8px] uppercase tracking-[0.5em] text-muted-foreground/40">
+               {state.id}
             </span>
             <span className={cn(
-              "font-sans text-[11px] font-bold uppercase tracking-widest",
+              "font-sans text-[11px] font-black uppercase tracking-[0.3em]",
               isDarkApp ? "text-white" : "text-black"
             )}>
               {state.title}
@@ -192,8 +199,8 @@ export function Window({
           </div>
 
           {/* Right meta - High precision */}
-          <div className="flex items-center gap-4 font-mono text-[9px] uppercase tracking-[0.2em] opacity-40">
-            <span>{w} x {h}</span>
+          <div className="flex items-center gap-4 font-mono text-[8px] uppercase tracking-[0.4em] text-black/20">
+            <span>RES_{w}x{h}</span>
           </div>
         </div>
 
@@ -203,6 +210,16 @@ export function Window({
           isDarkApp ? "bg-[#0a0a0a]" : "bg-white"
         )}>
           {children}
+          
+          {/* Internal Hardware Grain */}
+          <div className="absolute inset-0 pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03] z-[99]" />
+          
+          {/* Editorial Stamp */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none opacity-[0.03] select-none z-0">
+             <div className="border-[12px] border-black p-8 rotate-[-12deg]">
+                <span className="text-[14vw] font-black tracking-tighter uppercase whitespace-nowrap">SYSTEM_AG</span>
+             </div>
+          </div>
         </div>
 
         {/* Resize handle */}
@@ -211,9 +228,9 @@ export function Window({
             type="button"
             aria-label="Resize window"
             onPointerDown={startResize}
-            className="absolute bottom-1 right-1 z-10 h-3 w-3 cursor-nwse-resize opacity-20 hover:opacity-100 transition"
+            className="absolute bottom-1.5 right-1.5 z-50 h-4 w-4 cursor-nwse-resize opacity-10 hover:opacity-100 transition"
           >
-            <div className="h-full w-full border-b-2 border-r-2 border-current" />
+            <div className="h-full w-full border-b-2 border-r-2 border-black" />
           </button>
         )}
       </motion.div>

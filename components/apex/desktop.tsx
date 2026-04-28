@@ -1,6 +1,6 @@
 "use client"
 
-import { AnimatePresence } from "framer-motion"
+import { AnimatePresence, motion } from "framer-motion"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { APPS, type AppId } from "@/lib/apex/apps"
 import { Wallpaper } from "./wallpaper"
@@ -10,6 +10,8 @@ import { Dock } from "./dock"
 import { Window, type WindowState } from "./window"
 import { SearchBar } from "./search-bar"
 import { BootLoader } from "./boot-loader"
+import { BroadcastMonitor } from "./broadcast-monitor"
+import { PortfolioSection } from "./portfolio/portfolio-section"
 
 import { AboutApp } from "./apps/about-app"
 import { ServicesApp } from "./apps/services-app"
@@ -20,6 +22,7 @@ import { TerminalApp } from "./apps/terminal-app"
 import { ContactApp } from "./apps/contact-app"
 import { SettingsApp } from "./apps/settings-app"
 import { InsightsApp } from "./apps/insights-app"
+import { MusicApp } from "./apps/music-app"
 
 export function Desktop() {
   const [booted, setBooted] = useState(false)
@@ -30,6 +33,8 @@ export function Desktop() {
   const containerRef = useRef<HTMLDivElement | null>(null)
   const zCounter = useRef(10)
   const positionCounter = useRef(0)
+
+  const [isPortfolioOpen, setIsPortfolioOpen] = useState(false)
 
   // measure container
   useEffect(() => {
@@ -47,16 +52,21 @@ export function Desktop() {
     order.length > 0 ? order[order.length - 1] : null
 
   const focusedTitle = useMemo(() => {
+    if (isPortfolioOpen) return "APEX Portfolio — Selected Works"
     if (!focusedApp) return "APEX Desktop"
     const w = windows[focusedApp]
     if (!w || w.minimized) return "APEX Desktop"
     return `${APPS[focusedApp].name} — ${APPS[focusedApp].subtitle}`
-  }, [focusedApp, windows])
+  }, [focusedApp, windows, isPortfolioOpen])
 
   const openApp = useCallback(
     (id: AppId) => {
       if (id === "search") {
         setSearchOpen(true)
+        return
+      }
+      if (id === "projects") {
+        setIsPortfolioOpen(true)
         return
       }
       setWindows((cur) => {
@@ -113,7 +123,7 @@ export function Desktop() {
   const toggleMaximize = useCallback((id: AppId) => {
     setWindows((cur) =>
       cur[id]
-        ? { ...cur, [id]: { ...cur[id], maximized: !cur[id].maximized } }
+    ? { ...cur, [id]: { ...cur[id], maximized: !cur[id].maximized } }
         : cur,
     )
   }, [])
@@ -158,10 +168,13 @@ export function Desktop() {
       if (e.key === "Escape" && searchOpen) {
         setSearchOpen(false)
       }
+      if (e.key === "Escape" && isPortfolioOpen) {
+        setIsPortfolioOpen(false)
+      }
     }
     window.addEventListener("keydown", onKey)
     return () => window.removeEventListener("keydown", onKey)
-  }, [searchOpen])
+  }, [searchOpen, isPortfolioOpen])
 
   // open About on first boot for atmosphere
   useEffect(() => {
@@ -203,6 +216,8 @@ export function Desktop() {
         return <SettingsApp />
       case "insights":
         return <InsightsApp />
+      case "music":
+        return <MusicApp />
       default:
         return null
     }
@@ -218,63 +233,98 @@ export function Desktop() {
       ref={containerRef}
       className="relative h-screen w-screen overflow-hidden bg-[#0a0a0a] text-white select-none"
     >
-      <Wallpaper />
+      {/* Desktop Layer */}
+      <motion.div 
+        className="relative h-full w-full"
+        animate={{ 
+          y: isPortfolioOpen ? "-100vh" : 0,
+          scale: isPortfolioOpen ? 0.9 : 1,
+          opacity: isPortfolioOpen ? 0 : 1 
+        }}
+        transition={{ type: "spring", damping: 25, stiffness: 80 }}
+      >
+        <Wallpaper />
+        <BroadcastMonitor />
 
-      <MenuBar
-        focusedTitle={focusedTitle}
-        onOpenSearch={() => setSearchOpen(true)}
-      />
-
-      <DesktopIcons onOpen={openApp} />
-
-      {/* windows */}
-      <div className="pointer-events-none absolute inset-0">
-        <AnimatePresence>
-          {Object.values(windows).map((w) => (
-            <Window
-              key={w.id}
-              state={w}
-              isFocused={focusedApp === w.id && !w.minimized}
-              containerSize={containerSize}
-              accent={APPS[w.id].tint}
-              onFocus={() => focusApp(w.id)}
-              onClose={() => closeApp(w.id)}
-              onMinimize={() => minimizeApp(w.id)}
-              onToggleMaximize={() => toggleMaximize(w.id)}
-              onMove={(pos) => moveApp(w.id, pos)}
-              onResize={(size) => resizeApp(w.id, size)}
-            >
-              {renderAppContent(w.id)}
-            </Window>
-          ))}
-        </AnimatePresence>
-      </div>
-
-      <Dock
-        openApps={openSet}
-        focusedApp={focusedApp}
-        onOpen={openApp}
-        onOpenSearch={() => setSearchOpen(true)}
-      />
-
-      <SearchBar
-        open={searchOpen}
-        onClose={() => setSearchOpen(false)}
-        onCommand={(id) => openApp(id)}
-      />
-
-      {!booted && <BootLoader onDone={() => setBooted(true)} />}
-
-      {/* hint when nothing is open */}
-      {booted && Object.keys(windows).length === 0 && (
-        <div className="pointer-events-none absolute bottom-24 left-1/2 z-[140] -translate-x-1/2 font-mono text-[10px] uppercase tracking-[0.32em] text-white/40">
-          press{" "}
-          <kbd className="mx-1 rounded border border-white/15 bg-white/5 px-1.5 py-0.5 text-white/70">
-            ⌘ K
-          </kbd>{" "}
-          to summon search
+        {/* Global "Computer Screen" DNA */}
+        <div className="pointer-events-none absolute inset-0 z-[1000] overflow-hidden opacity-[0.03]">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,black_100%)]" />
+          <div className="absolute inset-0 apex-grid-fine" />
+          {/* Scanlines */}
+          <div 
+            className="absolute inset-0 pointer-events-none opacity-20"
+            style={{
+              background: "repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(255,255,255,0.1) 2px, rgba(255,255,255,0.1) 3px)",
+              backgroundSize: "100% 4px"
+            }}
+          />
         </div>
-      )}
+
+        <MenuBar
+          focusedTitle={focusedTitle}
+          onOpenSearch={() => setSearchOpen(true)}
+        />
+
+        <DesktopIcons onOpen={openApp} />
+
+        {/* windows */}
+        <div className="pointer-events-none absolute inset-0">
+          <AnimatePresence>
+            {Object.values(windows).map((w) => (
+              <Window
+                key={w.id}
+                state={w}
+                isFocused={focusedApp === w.id && !w.minimized}
+                containerSize={containerSize}
+                accent={APPS[w.id].tint}
+                onFocus={() => focusApp(w.id)}
+                onClose={() => closeApp(w.id)}
+                onMinimize={() => minimizeApp(w.id)}
+                onToggleMaximize={() => toggleMaximize(w.id)}
+                onMove={(pos) => moveApp(w.id, pos)}
+                onResize={(size) => resizeApp(w.id, size)}
+              >
+                <div className="relative h-full w-full">
+                   {renderAppContent(w.id)}
+                   {/* Window Scanline overlay */}
+                   <div className="pointer-events-none absolute inset-0 z-[100] opacity-[0.015] bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_2px,3px_100%]" />
+                </div>
+              </Window>
+            ))}
+          </AnimatePresence>
+        </div>
+
+        <Dock
+          openApps={openSet}
+          focusedApp={focusedApp}
+          onOpen={openApp}
+          onOpenSearch={() => setSearchOpen(true)}
+        />
+
+        <SearchBar
+          open={searchOpen}
+          onClose={() => setSearchOpen(false)}
+          onCommand={(id) => openApp(id)}
+        />
+
+        {!booted && <BootLoader onDone={() => setBooted(true)} />}
+
+        {/* hint when nothing is open */}
+        {booted && Object.keys(windows).length === 0 && (
+          <div className="pointer-events-none absolute bottom-24 left-1/2 z-[140] -translate-x-1/2 font-mono text-[10px] uppercase tracking-[0.32em] text-white/40">
+            SYSTEM_IDLE // ACCESS_COMMAND_K
+          </div>
+        )}
+      </motion.div>
+
+      {/* Portfolio Layer */}
+      <AnimatePresence>
+        {isPortfolioOpen && (
+          <PortfolioSection 
+            onClose={() => setIsPortfolioOpen(false)} 
+          />
+        )}
+      </AnimatePresence>
     </div>
   )
 }

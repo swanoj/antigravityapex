@@ -10,6 +10,7 @@ import {
   Settings as SettingsIcon,
   Search,
   BarChart3,
+  Music,
 } from "lucide-react"
 
 export type AppId =
@@ -23,6 +24,7 @@ export type AppId =
   | "settings"
   | "search"
   | "insights"
+  | "music"
 
 export type AppDefinition = {
   id: AppId
@@ -161,6 +163,17 @@ export const APPS: Record<AppId, AppDefinition> = {
     inDock: true,
     aliases: ["insights", "stats", "data", "metrics", "dominance"],
   },
+  music: {
+    id: "music",
+    name: "Pulse Audio",
+    subtitle: "Strategic frequency",
+    icon: Music,
+    tint: "#8B5CF6",
+    defaultSize: { w: 400, h: 560 },
+    onDesktop: true,
+    inDock: true,
+    aliases: ["music", "audio", "pulse", "sound", "radio", "spotify"],
+  },
 }
 
 export const DESKTOP_APP_ORDER: AppId[] = [
@@ -172,6 +185,7 @@ export const DESKTOP_APP_ORDER: AppId[] = [
   "terminal",
   "contact",
   "insights",
+  "music",
   "settings",
 ]
 
@@ -184,5 +198,6 @@ export const DOCK_APP_ORDER: AppId[] = [
   "terminal",
   "search",
   "insights",
+  "music",
   "contact",
 ]

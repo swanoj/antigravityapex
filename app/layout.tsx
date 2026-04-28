@@ -1,3 +1,4 @@
+import { Metadata, Viewport } from "next"
 import { Inter, JetBrains_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
@@ -40,6 +41,47 @@ export default function RootLayout({
       >
         <div className="apex-paper-texture" aria-hidden />
         {children}
+        {process.env.NODE_ENV === "development" && (
+          <>
+            <script src="https://unpkg.com/react-scan/dist/auto.global.js" async />
+            <script src="https://situ.design/inspector/situImport.bundle.js" async />
+            <script
+              dangerouslySetInnerHTML={{
+                __html: `
+                  (function() {
+                    function initInspector() {
+                      if (typeof window.installReactClickInspector === 'function') {
+                        window.installReactClickInspector();
+                        return true;
+                      } else if (window.SituInspector && typeof window.SituInspector.initialize === 'function') {
+                        window.SituInspector.initialize();
+                        return true;
+                      }
+                      return false;
+                    }
+                    if (document.readyState === 'loading') {
+                      document.addEventListener('DOMContentLoaded', function() {
+                        if (!initInspector()) {
+                          let attempts = 0;
+                          const retry = setInterval(function() {
+                            if (initInspector() || ++attempts >= 20) clearInterval(retry);
+                          }, 100);
+                        }
+                      });
+                    } else {
+                      if (!initInspector()) {
+                        let attempts = 0;
+                        const retry = setInterval(function() {
+                          if (initInspector() || ++attempts >= 20) clearInterval(retry);
+                        }, 100);
+                      }
+                    }
+                  })();
+                `,
+              }}
+            />
+          </>
+        )}
         {process.env.NODE_ENV === "production" && <Analytics />}
       </body>
     </html>
