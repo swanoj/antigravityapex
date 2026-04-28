@@ -1,40 +1,30 @@
-import type { Metadata, Viewport } from "next"
-import { Geist, Geist_Mono } from "next/font/google"
+import { Inter, JetBrains_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
 
-const geist = Geist({
+const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-geist",
+  variable: "--font-inter",
   display: "swap",
 })
-const geistMono = Geist_Mono({
+const jetbrains = JetBrains_Mono({
   subsets: ["latin"],
-  variable: "--font-geist-mono",
+  variable: "--font-jetbrains",
   display: "swap",
 })
 
 export const metadata: Metadata = {
-  title: "APEX Digital — We Build. We Launch. We Dominate.",
+  title: "ANTIGRAVITY APEX — Elite Digital OS",
   description:
-    "APEX Digital is a full-spectrum digital consulting agency. Marketing, web, eCommerce, ads, video, apps and AI integration — engineered for measurable dominance.",
+    "High-performance digital engineering and immersive editorial systems. Built for the ambitious operator.",
   generator: "v0.app",
-  keywords: [
-    "APEX Digital",
-    "digital agency",
-    "AI agency",
-    "performance marketing",
-    "web development",
-    "video production",
-    "SaaS",
-  ],
   icons: {
     icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
   },
 }
 
 export const viewport: Viewport = {
-  themeColor: "#0a0a0a",
+  themeColor: "#f8f7f2",
   width: "device-width",
   initialScale: 1,
   userScalable: true,
@@ -44,10 +34,11 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className="dark bg-background">
+    <html lang="en" className="bg-background">
       <body
-        className={`${geist.variable} ${geistMono.variable} font-sans antialiased bg-background text-foreground`}
+        className={`${inter.variable} ${jetbrains.variable} font-sans antialiased bg-background text-foreground`}
       >
+        <div className="apex-paper-texture" aria-hidden />
         {children}
         {process.env.NODE_ENV === "production" && <Analytics />}
       </body>

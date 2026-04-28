@@ -10,7 +10,7 @@ import {
   Scissors,
   Boxes,
   Sparkles,
-  ArrowUpRight,
+  ArrowRight,
 } from "lucide-react"
 import { APEX_SERVICES } from "@/lib/apex/data"
 
@@ -27,86 +27,65 @@ const ICONS = {
 
 export function ServicesApp() {
   return (
-    <div className="px-6 py-6">
-      {/* header */}
-      <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <span className="font-mono text-[10px] uppercase tracking-[0.32em] text-[color:var(--apex-cyan)]">
-            // services · 8 capabilities
-          </span>
-          <h2 className="mt-2 text-balance text-2xl font-semibold tracking-tight">
-            Full-spectrum, under one roof.
-          </h2>
-          <p className="mt-1.5 max-w-lg text-sm leading-relaxed text-white/60">
-            One partner, every capability, zero compromise. Each lane is staffed
-            by senior operators and backed by APEX&apos;s own playbooks.
-          </p>
-        </div>
-        <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.22em] text-white/40">
-          <span className="inline-block h-1.5 w-1.5 rounded-full bg-[color:var(--apex-cyan)] apex-pulse" />
-          all systems online
-        </div>
+    <div className="bg-white h-full overflow-y-auto">
+      <div className="p-10 border-b border-black">
+        <span className="font-mono text-[10px] uppercase tracking-[0.4em] text-muted-foreground">
+          // core · capabilities · v.04
+        </span>
+        <h2 className="mt-4 text-7xl font-bold tracking-tighter text-black md:text-9xl">
+          Complete <br />
+          <span className="opacity-20 italic">Architectures.</span>
+        </h2>
       </div>
 
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
+      <div className="grid grid-cols-1 md:grid-cols-2 border-b border-black">
         {APEX_SERVICES.map((s, i) => {
           const Icon = ICONS[s.icon as keyof typeof ICONS] ?? Sparkles
           return (
-            <motion.article
+            <motion.article 
               key={s.id}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.04 * i, duration: 0.35 }}
-              className="group relative overflow-hidden rounded-xl border border-white/5 bg-white/[0.02] p-5 transition hover:border-[color:var(--apex-cyan)]/30 hover:bg-white/[0.04]"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: i * 0.05 }}
+              className="p-10 border-r border-b border-black last:border-b-0 even:border-r-0 group hover:bg-zinc-50 transition-colors"
             >
-              <div
-                className="pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full opacity-0 transition group-hover:opacity-100"
-                style={{
-                  background:
-                    "radial-gradient(circle, rgba(0,240,255,0.18), transparent 70%)",
-                }}
-                aria-hidden
-              />
+               <div className="flex justify-between items-start">
+                  <div className="h-12 w-12 border border-black flex items-center justify-center">
+                     <Icon className="h-5 w-5 text-black" />
+                  </div>
+                  <span className="font-mono text-[10px] uppercase tracking-widest text-black/40">0{i + 1}</span>
+               </div>
+               
+               <h3 className="mt-12 text-4xl font-bold tracking-tighter text-black">
+                  {s.name}
+               </h3>
+               <p className="mt-4 text-sm font-medium leading-relaxed text-black/60 max-w-sm">
+                  {s.description}
+               </p>
 
-              <div className="flex items-start justify-between">
-                <span
-                  className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 bg-black/40 text-[color:var(--apex-cyan)]"
-                  style={{ boxShadow: "inset 0 0 0 1px rgba(0,240,255,0.15)" }}
-                >
-                  <Icon className="h-4.5 w-4.5" aria-hidden />
-                </span>
-                <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-white/40">
-                  {s.tag}
-                </span>
-              </div>
+               <ul className="mt-8 flex flex-wrap gap-2">
+                 {s.capabilities.map((c) => (
+                   <li key={c} className="font-mono text-[9px] uppercase tracking-widest border border-black/10 px-2 py-1 bg-zinc-100 italic">
+                      {c}
+                   </li>
+                 ))}
+               </ul>
 
-              <h3 className="mt-4 text-base font-semibold text-white">
-                {s.name}
-              </h3>
-              <p className="mt-1.5 text-xs leading-relaxed text-white/60">
-                {s.description}
-              </p>
-
-              <ul className="mt-4 flex flex-wrap gap-1.5">
-                {s.capabilities.map((c) => (
-                  <li
-                    key={c}
-                    className="rounded-full border border-white/10 bg-white/[0.03] px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.18em] text-white/60"
-                  >
-                    {c}
-                  </li>
-                ))}
-              </ul>
-
-              <div className="mt-4 flex items-center justify-between border-t border-white/5 pt-3 font-mono text-[10px] uppercase tracking-[0.22em] text-white/40">
-                <span>0{i + 1} / 08</span>
-                <span className="flex items-center gap-1 text-white/60 transition group-hover:text-[color:var(--apex-cyan)]">
-                  brief us <ArrowUpRight className="h-3 w-3" aria-hidden />
-                </span>
-              </div>
+               <div className="mt-12 flex items-center gap-2 group-hover:gap-4 transition-all cursor-pointer">
+                  <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-black">Deploy Strategy</span>
+                  <ArrowRight className="h-3 w-3 text-black" />
+               </div>
             </motion.article>
           )
         })}
+      </div>
+
+      <div className="p-20 text-center bg-black text-white">
+         <h3 className="text-4xl font-bold tracking-tighter">Ready to dominate?</h3>
+         <p className="mt-4 text-white/40 font-mono text-[10px] uppercase tracking-widest">Inception to hyper-scale in under 90 days.</p>
+         <button className="mt-10 px-10 py-5 border border-white font-mono text-[11px] uppercase tracking-widest hover:bg-white hover:text-black transition-all">
+            Secure the engagement
+         </button>
       </div>
     </div>
   )

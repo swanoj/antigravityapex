@@ -90,7 +90,7 @@ export function Window({
     window.addEventListener("pointerup", onUp)
   }
 
-  if (state.minimized) return null
+  const isDarkApp = state.id === "terminal" || state.id === "video"
 
   return (
     <div
@@ -99,7 +99,7 @@ export function Window({
       aria-hidden={false}
     >
       <motion.div
-        initial={{ opacity: 0, scale: 0.96, y: 12 }}
+        initial={{ opacity: 0, scale: 0.98, y: 20 }}
         animate={{
           opacity: 1,
           scale: 1,
@@ -110,8 +110,8 @@ export function Window({
           top: y,
           left: 0,
         }}
-        exit={{ opacity: 0, scale: 0.96, y: 8 }}
-        transition={{ type: "spring", stiffness: 320, damping: 32, mass: 0.7 }}
+        exit={{ opacity: 0, scale: 0.98, y: 10 }}
+        transition={{ type: "spring", stiffness: 400, damping: 40, mass: 1 }}
         drag={!isMax && !resizing}
         dragControls={dragControls}
         dragListener={false}
@@ -132,16 +132,15 @@ export function Window({
         onPointerDown={onFocus}
         style={{
           zIndex: state.zIndex,
-          boxShadow: isFocused
-            ? `0 30px 100px -20px rgba(0,0,0,0.85), 0 0 0 1px ${accent}33, 0 0 60px -10px ${accent}55`
-            : "0 20px 60px -20px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.04)",
         }}
         className={cn(
-          "pointer-events-auto absolute apex-glass overflow-hidden rounded-xl",
+          "pointer-events-auto absolute apex-editorial-window overflow-hidden border border-black/[0.03]",
           "flex flex-col",
+          isDarkApp ? "bg-black text-white" : "bg-white text-black",
+          isFocused ? "z-[100]" : "z-[10]"
         )}
       >
-        {/* Title bar */}
+        {/* Title bar — Editorial Style */}
         <div
           onPointerDown={(e) => {
             onFocus()
@@ -149,13 +148,10 @@ export function Window({
           }}
           onDoubleClick={onToggleMaximize}
           className={cn(
-            "relative flex h-10 shrink-0 items-center gap-3 border-b border-white/5 px-3 select-none",
+            "relative flex h-12 shrink-0 items-center justify-between border-b px-4 select-none",
             isMax ? "cursor-default" : "cursor-grab active:cursor-grabbing",
+            isDarkApp ? "border-white/10 bg-zinc-900" : "border-black/5 bg-zinc-50/50"
           )}
-          style={{
-            background:
-              "linear-gradient(180deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%)",
-          }}
         >
           {/* Traffic lights */}
           <div className="flex items-center gap-2">
@@ -164,65 +160,49 @@ export function Window({
               onPointerDown={(e) => e.stopPropagation()}
               onClick={onClose}
               aria-label="Close window"
-              className="group h-3 w-3 rounded-full bg-[#ff5f57] outline-none ring-0 transition hover:bg-[#ff3b30]"
-            >
-              <span className="block h-full w-full rounded-full opacity-0 transition group-hover:opacity-100" />
-            </button>
+              className="h-3 w-3 rounded-full border border-black/5 bg-[#ff5f57] transition hover:brightness-110"
+            />
             <button
               type="button"
               onPointerDown={(e) => e.stopPropagation()}
               onClick={onMinimize}
               aria-label="Minimize window"
-              className="h-3 w-3 rounded-full bg-[#febc2e] transition hover:bg-[#f4a700]"
+              className="h-3 w-3 rounded-full border border-black/5 bg-[#febc2e] transition hover:brightness-110"
             />
             <button
               type="button"
               onPointerDown={(e) => e.stopPropagation()}
               onClick={onToggleMaximize}
               aria-label="Maximize window"
-              className="h-3 w-3 rounded-full bg-[#28c840] transition hover:bg-[#00b631]"
+              className="h-3 w-3 rounded-full border border-black/5 bg-[#28c840] transition hover:brightness-110"
             />
           </div>
 
-          {/* Title */}
-          <div className="pointer-events-none flex flex-1 items-center justify-center gap-2 text-xs">
-            <span
-              className="inline-block h-1.5 w-1.5 rounded-full"
-              style={{
-                background: accent,
-                boxShadow: `0 0 8px ${accent}`,
-              }}
-            />
-            <span className="font-mono uppercase tracking-[0.18em] text-white/70">
+          {/* Title - Centered & Bolt */}
+          <div className="pointer-events-none absolute left-1/2 -translate-x-1/2 flex items-center gap-3">
+             <span className="font-mono text-[9px] uppercase tracking-[0.4em] text-muted-foreground/60">
+              {state.id}
+            </span>
+            <span className={cn(
+              "font-sans text-[11px] font-bold uppercase tracking-widest",
+              isDarkApp ? "text-white" : "text-black"
+            )}>
               {state.title}
             </span>
-            {state.subtitle && (
-              <span className="hidden font-mono text-[10px] uppercase tracking-[0.18em] text-white/30 md:inline">
-                · {state.subtitle}
-              </span>
-            )}
           </div>
 
-          {/* Right meta */}
-          <div className="hidden items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-white/30 md:flex">
-            <span
-              className={cn(
-                "inline-flex h-1.5 w-1.5 rounded-full",
-                isFocused ? "apex-pulse" : "",
-              )}
-              style={{
-                background: isFocused ? accent : "rgba(255,255,255,0.25)",
-              }}
-            />
-            <span>{isFocused ? "active" : "idle"}</span>
+          {/* Right meta - High precision */}
+          <div className="flex items-center gap-4 font-mono text-[9px] uppercase tracking-[0.2em] opacity-40">
+            <span>{w} x {h}</span>
           </div>
         </div>
 
         {/* Body */}
-        <div className="apex-scroll relative flex-1 overflow-auto">
+        <div className={cn(
+          "apex-scroll relative flex-1 overflow-auto",
+          isDarkApp ? "bg-[#0a0a0a]" : "bg-white"
+        )}>
           {children}
-          {/* Subtle scanlines overlay */}
-          <div className="apex-scanlines pointer-events-none absolute inset-0 opacity-[0.35]" />
         </div>
 
         {/* Resize handle */}
@@ -231,20 +211,9 @@ export function Window({
             type="button"
             aria-label="Resize window"
             onPointerDown={startResize}
-            className="absolute bottom-0 right-0 z-10 h-4 w-4 cursor-nwse-resize"
+            className="absolute bottom-1 right-1 z-10 h-3 w-3 cursor-nwse-resize opacity-20 hover:opacity-100 transition"
           >
-            <svg
-              viewBox="0 0 16 16"
-              className="h-4 w-4 text-white/30 hover:text-white/70 transition"
-              aria-hidden
-            >
-              <path
-                d="M2 14 L14 2 M6 14 L14 6 M10 14 L14 10"
-                stroke="currentColor"
-                strokeWidth="1.2"
-                fill="none"
-              />
-            </svg>
+            <div className="h-full w-full border-b-2 border-r-2 border-current" />
           </button>
         )}
       </motion.div>

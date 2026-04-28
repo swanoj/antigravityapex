@@ -167,26 +167,26 @@ export function SearchBar({ open, onClose, onCommand }: Props) {
             transition={{ duration: 0.18, ease: "easeOut" }}
             className="absolute left-1/2 top-20 z-[310] w-[min(620px,92vw)] -translate-x-1/2"
           >
-            <div className="apex-glass-strong overflow-hidden rounded-2xl">
-              <div className="flex items-center gap-3 border-b border-white/5 px-4 py-3">
-                <Search className="h-4 w-4 text-[color:var(--apex-cyan)]" aria-hidden />
+            <div className="apex-chrome-glass overflow-hidden rounded-2xl shadow-2xl ring-1 ring-white/10">
+              <div className="flex items-center gap-4 border-b border-white/5 px-6 py-5">
+                <Search className="h-5 w-5 text-white/40" />
                 <input
                   ref={inputRef}
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder='Try: "open services", "show projects", "book a call"...'
-                  className="flex-1 bg-transparent font-sans text-sm text-white placeholder:text-white/40 focus:outline-none"
+                  placeholder="Summon any protocol..."
+                  className="flex-1 bg-transparent font-sans text-lg font-bold tracking-tight text-white placeholder:text-white/20 focus:outline-none"
                   aria-label="Global search"
                 />
-                <kbd className="hidden items-center gap-1 rounded border border-white/10 bg-white/[0.04] px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-widest text-white/50 md:flex">
-                  <Command className="h-3 w-3" aria-hidden />K
+                <kbd className="hidden items-center gap-1 rounded-sm border border-white/10 bg-white/[0.04] px-2 py-1 font-mono text-[9px] uppercase tracking-widest text-white/30 md:flex">
+                  <Command className="h-2.5 w-2.5" />K
                 </kbd>
               </div>
 
-              <ul className="max-h-[320px] overflow-y-auto apex-scroll p-1">
+              <ul className="max-h-[400px] overflow-y-auto apex-scroll p-2">
                 {suggestions.length === 0 && (
-                  <li className="px-4 py-6 text-center font-mono text-xs uppercase tracking-[0.2em] text-white/40">
-                    No matches — try "services", "projects" or "terminal"
+                  <li className="px-6 py-10 text-center font-mono text-[10px] uppercase tracking-[0.3em] text-white/20">
+                    protocol not found // try "services"
                   </li>
                 )}
                 {suggestions.map((s, i) => {
@@ -200,32 +200,29 @@ export function SearchBar({ open, onClose, onCommand }: Props) {
                           onCommand(s.id)
                           onClose()
                         }}
-                        className="group flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left transition hover:bg-white/[0.06]"
+                        className="group flex w-full items-center gap-4 rounded-xl px-4 py-3 text-left transition hover:bg-white/[0.08]"
                       >
-                        <span
-                          className="flex h-8 w-8 items-center justify-center rounded-md border border-white/10 bg-white/[0.03]"
-                          style={{
-                            boxShadow: `inset 0 0 0 1px ${app.tint}22`,
-                          }}
-                        >
-                          <Icon className="h-4 w-4" style={{ color: app.tint }} aria-hidden />
-                        </span>
-                        <span className="flex flex-1 flex-col">
-                          <span className="text-[13px] text-white">{s.label}</span>
-                          <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/40">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-black/40 text-white ring-1 ring-white/10 group-hover:ring-white/30 transition-shadow">
+                          <Icon className="h-5 w-5" style={{ color: app.tint }} />
+                        </div>
+                        <div className="flex flex-1 flex-col">
+                          <span className="text-base font-bold tracking-tight text-white">{s.label}</span>
+                          <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/30">
                             {s.hint}
                           </span>
-                        </span>
-                        <ArrowRight className="h-4 w-4 text-white/30 transition group-hover:translate-x-0.5 group-hover:text-white" aria-hidden />
+                        </div>
+                        <div className="opacity-0 transform translate-x-2 transition-all group-hover:opacity-100 group-hover:translate-x-0">
+                           <ArrowRight className="h-4 w-4 text-white/40" />
+                        </div>
                       </button>
                     </li>
                   )
                 })}
               </ul>
 
-              <div className="flex items-center justify-between border-t border-white/5 bg-black/30 px-4 py-2 font-mono text-[10px] uppercase tracking-[0.18em] text-white/40">
-                <span>Enter to open · Esc to close</span>
-                <span className="text-[color:var(--apex-cyan)]">APEX OS · v4.0</span>
+              <div className="flex items-center justify-between border-t border-white/5 bg-black/40 px-6 py-3 font-mono text-[9px] uppercase tracking-[0.3em] text-white/20">
+                <span>Select protocol then click Enter</span>
+                <span className="text-white/40">ANTIGRAVITY APEX · LOCKED</span>
               </div>
             </div>
           </motion.div>

@@ -5,104 +5,67 @@ import { APEX_PROCESS } from "@/lib/apex/data"
 
 export function ProcessApp() {
   return (
-    <div className="px-6 py-7">
-      <div className="mb-7">
-        <span className="font-mono text-[10px] uppercase tracking-[0.32em] text-[color:var(--apex-cyan)]">
-          // process · 4 phases
+    <div className="bg-white h-full overflow-y-auto">
+      <div className="p-10 border-b border-black">
+        <span className="font-mono text-[10px] uppercase tracking-[0.4em] text-muted-foreground">
+          // operations · alignment · v.04
         </span>
-        <h2 className="mt-2 text-balance text-2xl font-semibold tracking-tight">
-          A cinematic operating system for results.
+        <h2 className="mt-4 text-7xl font-bold tracking-tighter text-black md:text-9xl">
+          The <br />
+          <span className="opacity-20 italic">Method.</span>
         </h2>
-        <p className="mt-1.5 max-w-lg text-sm leading-relaxed text-white/60">
-          Four phases, one squad. Every step engineered around the metric that
-          moves the business.
-        </p>
       </div>
 
-      <ol className="relative space-y-4 pl-8">
-        {/* timeline rail */}
-        <span
-          aria-hidden
-          className="absolute left-3 top-2 bottom-2 w-px"
-          style={{
-            background:
-              "linear-gradient(180deg, rgba(0,240,255,0.6), rgba(59,130,246,0.5), rgba(255,107,0,0.5))",
-            boxShadow: "0 0 8px rgba(0,240,255,0.3)",
-          }}
-        />
-
+      <div className="flex flex-col">
         {APEX_PROCESS.map((p, i) => (
-          <motion.li
+          <motion.div 
             key={p.step}
-            initial={{ opacity: 0, x: -12 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.08 * i, duration: 0.4 }}
-            className="relative"
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="group relative flex border-b border-black last:border-b-0"
           >
-            {/* node */}
-            <span
-              aria-hidden
-              className="absolute -left-[22px] top-2 flex h-4 w-4 items-center justify-center"
-            >
-              <span
-                className="h-2.5 w-2.5 rounded-full"
-                style={{
-                  background:
-                    i === 0
-                      ? "#00F0FF"
-                      : i === 1
-                      ? "#3B82F6"
-                      : i === 2
-                      ? "#3B82F6"
-                      : "#FF6B00",
-                  boxShadow: `0 0 12px ${
-                    i === 0
-                      ? "#00F0FF"
-                      : i === 1
-                      ? "#3B82F6"
-                      : i === 2
-                      ? "#3B82F6"
-                      : "#FF6B00"
-                  }`,
-                }}
-              />
-            </span>
+            {/* Step Number Bar */}
+            <div className="w-20 md:w-40 border-r border-black flex items-center justify-center bg-zinc-50 group-hover:bg-black transition-colors">
+               <span className="text-4xl md:text-6xl font-bold tracking-tighter text-black group-hover:text-white transition-colors">
+                  0{p.step}
+               </span>
+            </div>
 
-            <div className="rounded-xl border border-white/5 bg-white/[0.02] p-5 transition hover:border-[color:var(--apex-cyan)]/30 hover:bg-white/[0.04]">
-              <div className="flex items-baseline justify-between">
-                <div className="flex items-baseline gap-3">
-                  <span className="font-mono text-[10px] uppercase tracking-[0.32em] text-white/40">
-                    phase {p.step}
-                  </span>
-                  <h3 className="text-lg font-semibold text-white">{p.title}</h3>
-                </div>
-                <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-[color:var(--apex-cyan)]">
+            <div className="flex-1 p-10 md:p-20">
+               <div className="font-mono text-[10px] uppercase tracking-[0.4em] text-muted-foreground mb-4">
                   {p.summary}
-                </span>
-              </div>
-              <p className="mt-2 max-w-2xl text-sm leading-relaxed text-white/60">
-                {p.detail}
-              </p>
+               </div>
+               <h3 className="text-4xl md:text-6xl font-bold tracking-tighter text-black">
+                  {p.title}
+               </h3>
+               <p className="mt-8 text-lg font-medium leading-relaxed text-black/60 max-w-2xl">
+                  {p.detail}
+               </p>
+               
+               <div className="mt-12 flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
+                  {["Linear Alignment", "Atomic Verification", "Hyper-Iteration"].map(tag => (
+                    <span key={tag} className="flex-none font-mono text-[9px] uppercase tracking-widest border border-black/10 px-3 py-1 bg-zinc-50 text-black/40">
+                       {tag}
+                    </span>
+                  ))}
+               </div>
             </div>
-          </motion.li>
+          </motion.div>
         ))}
-      </ol>
+      </div>
 
-      <div className="mt-8 rounded-xl border border-[color:var(--apex-orange)]/30 bg-[color:var(--apex-orange)]/[0.04] p-4">
-        <div className="flex items-center justify-between gap-4">
-          <div>
-            <div className="font-mono text-[10px] uppercase tracking-[0.32em] text-[color:var(--apex-orange)]">
-              // outcome guarantee
+      <div className="p-20 bg-[#fafafa] border-t border-black">
+         <div className="max-w-4xl mx-auto flex flex-col md:flex-row justify-between items-center gap-10">
+            <div>
+               <h4 className="text-2xl font-bold tracking-tight text-black italic">The 90-Day Guarantee.</h4>
+               <p className="mt-2 text-sm text-black/40 font-medium">If the needle doesn't move, we don't stop. Simple.</p>
             </div>
-            <p className="mt-1.5 text-sm text-white/80">
-              If the model doesn&apos;t move within 90 days, we keep working
-              until it does. No retainer roulette.
-            </p>
-          </div>
-          <span className="hidden font-mono text-[10px] uppercase tracking-[0.22em] text-white/40 md:inline">
-            sla · sealed
-          </span>
-        </div>
+            <div className="h-16 w-1px bg-black hidden md:block" />
+            <div className="font-mono text-[10px] uppercase tracking-[0.5em] text-black/20 text-center md:text-left">
+               AUTHENTICATED OPERATIONS // SEALED 2026
+            </div>
+         </div>
       </div>
     </div>
   )

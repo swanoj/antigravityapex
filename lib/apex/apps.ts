@@ -9,6 +9,7 @@ import {
   Mail,
   Settings as SettingsIcon,
   Search,
+  BarChart3,
 } from "lucide-react"
 
 export type AppId =
@@ -21,6 +22,7 @@ export type AppId =
   | "contact"
   | "settings"
   | "search"
+  | "insights"
 
 export type AppDefinition = {
   id: AppId
@@ -148,6 +150,17 @@ export const APPS: Record<AppId, AppDefinition> = {
     inDock: true,
     aliases: ["search", "find", "command", "k"],
   },
+  insights: {
+    id: "insights",
+    name: "Insights",
+    subtitle: "Dominance metrics",
+    icon: BarChart3,
+    tint: "#3B82F6",
+    defaultSize: { w: 900, h: 600 },
+    onDesktop: true,
+    inDock: true,
+    aliases: ["insights", "stats", "data", "metrics", "dominance"],
+  },
 }
 
 export const DESKTOP_APP_ORDER: AppId[] = [
@@ -158,6 +171,7 @@ export const DESKTOP_APP_ORDER: AppId[] = [
   "video",
   "terminal",
   "contact",
+  "insights",
   "settings",
 ]
 
@@ -169,5 +183,6 @@ export const DOCK_APP_ORDER: AppId[] = [
   "video",
   "terminal",
   "search",
+  "insights",
   "contact",
 ]

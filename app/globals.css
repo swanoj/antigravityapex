@@ -4,50 +4,51 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* APEX Digital — dark futuristic */
-  --background: #0a0a0a;
-  --foreground: #f5f7fa;
-  --card: #121212;
-  --card-foreground: #f5f7fa;
-  --popover: #0f0f10;
-  --popover-foreground: #f5f7fa;
-  --primary: #00f0ff;
-  --primary-foreground: #0a0a0a;
-  --secondary: #161618;
-  --secondary-foreground: #f5f7fa;
-  --muted: #161618;
-  --muted-foreground: #8a8f98;
-  --accent: #3b82f6;
-  --accent-foreground: #f5f7fa;
+  /* FRONT YARD — Modern Editorial Aesthetic */
+  --background: #f8f7f2; /* Cream Desktop */
+  --foreground: #0a0a0a;
+  --card: #ffffff; /* Editorial Windows */
+  --card-foreground: #0a0a0a;
+  --popover: #ffffff;
+  --popover-foreground: #0a0a0a;
+  --primary: #0a0a0a;
+  --primary-foreground: #f8f7f2;
+  --secondary: #f1f0e8;
+  --secondary-foreground: #0a0a0a;
+  --muted: #f1f0e8;
+  --muted-foreground: #6b6b6b;
+  --accent: #000000;
+  --accent-foreground: #ffffff;
   --destructive: #ef4444;
-  --destructive-foreground: #f5f7fa;
-  --border: rgba(255, 255, 255, 0.08);
-  --input: rgba(255, 255, 255, 0.08);
-  --ring: #00f0ff;
+  --destructive-foreground: #f8f7f2;
+  --border: rgba(0, 0, 0, 0.08);
+  --input: rgba(0, 0, 0, 0.08);
+  --ring: #0a0a0a;
 
   --apex-cyan: #00f0ff;
   --apex-blue: #3b82f6;
   --apex-orange: #ff6b00;
   --apex-charcoal: #121212;
   --apex-black: #0a0a0a;
-  --apex-white: #f5f7fa;
-  --apex-grid: rgba(0, 240, 255, 0.06);
+  --apex-white: #ffffff;
+  --apex-cream: #f8f7f2;
+  --apex-grid: rgba(0, 0, 0, 0.03);
 
-  --radius: 0.625rem;
+  --radius: 0rem; /* Strict editorial sharp corners or minimal rounding */
 
-  --sidebar: #0a0a0a;
-  --sidebar-foreground: #f5f7fa;
-  --sidebar-primary: #00f0ff;
-  --sidebar-primary-foreground: #0a0a0a;
-  --sidebar-accent: #161618;
-  --sidebar-accent-foreground: #f5f7fa;
-  --sidebar-border: rgba(255, 255, 255, 0.08);
-  --sidebar-ring: #00f0ff;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #0a0a0a;
+  --sidebar-primary: #0a0a0a;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f1f0e8;
+  --sidebar-accent-foreground: #0a0a0a;
+  --sidebar-border: rgba(0, 0, 0, 0.08);
+  --sidebar-ring: #0a0a0a;
 }
 
 @theme inline {
-  --font-sans: 'Geist', 'Geist Fallback';
-  --font-mono: 'Geist Mono', 'Geist Mono Fallback';
+  --font-sans: 'Inter', 'Inter Fallback', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -75,11 +76,12 @@
   --color-apex-charcoal: var(--apex-charcoal);
   --color-apex-black: var(--apex-black);
   --color-apex-white: var(--apex-white);
+  --color-apex-cream: var(--apex-cream);
 
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
+  --radius-sm: 0;
+  --radius-md: 0;
+  --radius-lg: 0;
+  --radius-xl: 0;
 }
 
 @layer base {
@@ -90,55 +92,61 @@
   body {
     @apply bg-background text-foreground;
     overscroll-behavior: none;
+    font-feature-settings: "cv02", "cv03", "cv04", "ss01";
   }
   body {
-    background-color: #0a0a0a;
-    background-image:
-      radial-gradient(ellipse at 15% 0%, rgba(0, 240, 255, 0.08), transparent 55%),
-      radial-gradient(ellipse at 85% 100%, rgba(59, 130, 246, 0.07), transparent 55%),
-      radial-gradient(ellipse at 50% 50%, rgba(255, 107, 0, 0.03), transparent 70%);
+    background-color: var(--apex-cream);
   }
 }
 
-/* ============ APEX UI utilities ============ */
+/* ============ APEX / FRONT YARD UI utilities ============ */
 
 .apex-grid-bg {
   background-image:
-    linear-gradient(rgba(0, 240, 255, 0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 240, 255, 0.06) 1px, transparent 1px);
-  background-size: 56px 56px;
+    linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+  background-size: 80px 80px;
   background-position: -1px -1px;
 }
 
 .apex-grid-fine {
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
-  background-size: 14px 14px;
+    linear-gradient(rgba(0, 0, 0, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.02) 1px, transparent 1px);
+  background-size: 20px 20px;
 }
 
-.apex-glass {
-  background: linear-gradient(180deg, rgba(20, 20, 22, 0.85) 0%, rgba(12, 12, 14, 0.92) 100%);
-  backdrop-filter: blur(18px) saturate(140%);
-  -webkit-backdrop-filter: blur(18px) saturate(140%);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.04) inset,
-    0 30px 80px -20px rgba(0, 0, 0, 0.7),
-    0 0 0 1px rgba(0, 240, 255, 0.04);
+.apex-editorial-window {
+  background: white;
+  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
-.apex-glass-strong {
-  background: linear-gradient(180deg, rgba(18, 18, 20, 0.92) 0%, rgba(10, 10, 12, 0.96) 100%);
-  backdrop-filter: blur(22px) saturate(150%);
-  -webkit-backdrop-filter: blur(22px) saturate(150%);
-  border: 1px solid rgba(0, 240, 255, 0.12);
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.06) inset,
-    0 40px 100px -20px rgba(0, 0, 0, 0.85),
-    0 0 0 1px rgba(0, 240, 255, 0.06),
-    0 0 80px -20px rgba(0, 240, 255, 0.25);
+.apex-chrome-glass {
+  background: rgba(10, 10, 10, 0.85); /* Deep dark chrome */
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
+
+.apex-dock-glass {
+  background: rgba(10, 10, 10, 0.8);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+}
+
+.apex-paper-texture {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.04;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100'><filter id='paper'><feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100' height='100' filter='url(%23paper)'/></svg>");
+}
+
 
 .apex-neon-cyan {
   text-shadow:

@@ -19,6 +19,7 @@ import { VideoApp } from "./apps/video-app"
 import { TerminalApp } from "./apps/terminal-app"
 import { ContactApp } from "./apps/contact-app"
 import { SettingsApp } from "./apps/settings-app"
+import { InsightsApp } from "./apps/insights-app"
 
 export function Desktop() {
   const [booted, setBooted] = useState(false)
@@ -200,6 +201,8 @@ export function Desktop() {
         return <ContactApp />
       case "settings":
         return <SettingsApp />
+      case "insights":
+        return <InsightsApp />
       default:
         return null
     }

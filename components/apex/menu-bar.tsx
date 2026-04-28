@@ -32,10 +32,7 @@ export function MenuBar({ focusedTitle, onOpenSearch }: Props) {
 
   return (
     <div
-      className="absolute inset-x-0 top-0 z-[200] flex h-8 items-center gap-4 border-b border-white/[0.04] bg-black/40 px-3 text-[12px] text-white/85 backdrop-blur-xl"
-      style={{
-        WebkitBackdropFilter: "blur(20px)",
-      }}
+      className="absolute inset-x-0 top-0 z-[200] flex h-10 items-center gap-4 apex-chrome-glass px-4 text-[11px] text-white/85 shadow-lg"
     >
       {/* Left — logo + menu */}
       <div className="flex items-center gap-4">

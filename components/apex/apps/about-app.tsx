@@ -1,121 +1,68 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { APEX_STATS } from "@/lib/apex/data"
+import { APEX_STATS, APEX_BOOT_LINES } from "@/lib/apex/data"
 import { Zap, Target, Cpu, Shield } from "lucide-react"
 
 const PRINCIPLES = [
-  { icon: Zap, title: "Speed", body: "Concept to live in weeks, not quarters." },
-  { icon: Target, title: "Precision", body: "Every artifact tied to a measurable outcome." },
-  { icon: Cpu, title: "AI-native", body: "Embedded intelligence in every workflow." },
-  { icon: Shield, title: "Retention", body: "98% of clients still ship with us." },
+  { icon: Zap, title: "Velocity", body: "Concept to live in weeks, not quarters. Speed is our only moat." },
+  { icon: Target, title: "Outcome", body: "Every artifact tied to a measurable dominant outcome." },
+  { icon: Cpu, title: "Intelligence", body: "AI-native architectures embedded in every workflow." },
+  { icon: Shield, title: "Longevity", body: "98% of clients still ship with us. We play long games." },
 ]
 
 export function AboutApp() {
   return (
-    <div className="relative h-full">
-      {/* hero */}
-      <div className="relative overflow-hidden border-b border-white/5 px-8 pb-10 pt-10">
-        <div className="absolute inset-0 apex-grid-fine opacity-40" aria-hidden />
-        <div
-          className="absolute inset-0 opacity-60"
-          style={{
-            background:
-              "radial-gradient(ellipse 60% 100% at 0% 0%, rgba(0,240,255,0.18), transparent 60%), radial-gradient(ellipse 60% 100% at 100% 100%, rgba(255,107,0,0.10), transparent 60%)",
-          }}
-          aria-hidden
-        />
+    <div className="bg-white h-full overflow-y-auto">
+      {/* Hero */}
+      <div className="p-10 border-b border-black">
+        <span className="font-mono text-[10px] uppercase tracking-[0.4em] text-muted-foreground">
+          // agency · inception · 2026/Q1
+        </span>
+        <h2 className="mt-4 text-7xl font-bold tracking-tighter text-black md:text-9xl">
+          Build. Launch. <br />
+          <span className="opacity-20 italic">Dominate.</span>
+        </h2>
+      </div>
 
-        <div className="relative">
-          <span className="font-mono text-[10px] uppercase tracking-[0.32em] text-[color:var(--apex-cyan)]">
-            // about · ANTIGRAVITY
-          </span>
-          <h2 className="mt-4 max-w-2xl text-balance text-3xl font-semibold leading-[1.05] tracking-tight md:text-4xl">
-            We Build. We Launch.{" "}
-            <span className="apex-text-gradient">We Dominate.</span>
-          </h2>
-          <p className="mt-4 max-w-xl text-pretty text-sm leading-relaxed text-white/70">
-            ANTIGRAVITY is an elite AI-native consulting engine for
-            ambitious operators. One squad covering strategy, brand, video,
-            engineering, media and AI — engineered around a single output:
-            measurable dominance.
-          </p>
-
-          <div className="mt-6 flex flex-wrap gap-2 font-mono text-[10px] uppercase tracking-[0.22em] text-white/60">
-            {[
-              "One partner",
-              "Every capability",
-              "Zero compromise",
-            ].map((tag) => (
-              <span
-                key={tag}
-                className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 border-b border-black">
+        <div className="p-10 border-r border-black flex flex-col justify-between">
+           <p className="text-2xl font-medium tracking-tight text-black leading-tight">
+             ANTIGRAVITY APEX is an elite consulting engine engineered for high-velocity operators. We bridge the gap between abstract strategy and tactical dominance.
+           </p>
+           <div className="mt-20 font-mono text-[10px] uppercase tracking-widest text-black/40">
+              System Release: V.0.4.82 // Stable
+           </div>
+        </div>
+        <div className="p-10 bg-zinc-50 space-y-8">
+           {PRINCIPLES.map((p, i) => (
+             <div key={p.title} className="flex gap-6 items-start">
+                <span className="text-black font-bold font-mono text-xs">0{i+1}</span>
+                <div>
+                   <h3 className="font-bold text-black uppercase tracking-widest text-[11px] mb-1">{p.title}</h3>
+                   <p className="text-sm text-black/60 font-medium leading-relaxed">{p.body}</p>
+                </div>
+             </div>
+           ))}
         </div>
       </div>
 
-      {/* stats */}
-      <div className="grid grid-cols-2 border-b border-white/5 md:grid-cols-4">
+      {/* Stats */}
+      <div className="grid grid-cols-2 md:grid-cols-4 border-b border-black">
         {APEX_STATS.map((s, i) => (
-          <motion.div
-            key={s.label}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.05 * i, duration: 0.4 }}
-            className="border-r border-white/5 px-6 py-6 last:border-r-0"
-          >
-            <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-white/40">
-              {s.label}
-            </div>
-            <div className="mt-2 text-3xl font-semibold tracking-tight text-white">
-              {s.value}
-            </div>
-            <div className="mt-1 font-mono text-[10px] uppercase tracking-[0.18em] text-white/40">
-              {s.hint}
-            </div>
-          </motion.div>
+          <div key={s.label} className="p-10 border-r border-black last:border-r-0 hover:bg-zinc-50 transition-colors">
+            <div className="text-4xl font-bold tracking-tight text-black">{s.value}</div>
+            <div className="mt-2 font-mono text-[9px] uppercase tracking-widest text-black/40">{s.label}</div>
+            <div className="mt-4 text-[10px] font-bold text-black opacity-20">{s.hint}</div>
+          </div>
         ))}
       </div>
 
-      {/* principles */}
-      <div className="px-8 py-8">
-        <div className="font-mono text-[10px] uppercase tracking-[0.32em] text-white/40">
-          // operating principles
-        </div>
-        <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2">
-          {PRINCIPLES.map((p) => (
-            <div
-              key={p.title}
-              className="flex gap-4 rounded-xl border border-white/5 bg-white/[0.02] p-4 transition hover:border-[color:var(--apex-cyan)]/30 hover:bg-white/[0.04]"
-            >
-              <span
-                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[color:var(--apex-cyan)]/30 text-[color:var(--apex-cyan)]"
-                style={{ boxShadow: "0 0 16px -4px rgba(0,240,255,0.5)" }}
-              >
-                <p.icon className="h-4 w-4" aria-hidden />
-              </span>
-              <div>
-                <div className="text-sm font-medium text-white">{p.title}</div>
-                <div className="mt-1 text-xs leading-relaxed text-white/60">
-                  {p.body}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <div className="apex-divider mt-8" />
-
-        <p className="mt-6 font-mono text-[11px] leading-relaxed text-white/50">
-          {"> "}team · 28 operators · strategy + creative + engineering + media{" "}
-          <span className="apex-cursor-blink text-[color:var(--apex-cyan)]">
-            ▍
-          </span>
-        </p>
+      <div className="p-10 font-mono text-[11px] leading-relaxed text-black/40 bg-zinc-100 flex justify-between items-center">
+         <div>
+            {"> "}APEX_INIT_COMPLETE // SUCCESS_DOMINANCE_LOCKED
+         </div>
+         <div className="apex-cursor-blink text-black">▍</div>
       </div>
     </div>
   )
