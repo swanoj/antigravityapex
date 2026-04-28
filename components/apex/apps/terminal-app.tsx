@@ -245,7 +245,7 @@ export function TerminalApp({ onCommand, openWindowsTitles }: Props) {
 
   return (
     <div
-      className="relative h-full bg-[#050505] font-mono text-[11px] leading-snug text-white/90 selection:bg-white/20"
+      className="relative h-full bg-[#0A0A0A] font-mono text-[11px] leading-snug text-white/90 selection:bg-white/20"
       onClick={() => inputRef.current?.focus()}
     >
       {/* Hardware Overlays */}

@@ -231,34 +231,24 @@ export function Desktop() {
   return (
     <div
       ref={containerRef}
-      className="relative h-screen w-screen overflow-hidden bg-[#0a0a0a] text-white select-none"
+      className="relative h-screen w-screen overflow-hidden bg-[#F5F5F0] text-black select-none font-sans"
     >
       {/* Desktop Layer */}
       <motion.div 
         className="relative h-full w-full"
         animate={{ 
           y: isPortfolioOpen ? "-100vh" : 0,
-          scale: isPortfolioOpen ? 0.9 : 1,
+          scale: isPortfolioOpen ? 0.96 : 1,
           opacity: isPortfolioOpen ? 0 : 1 
         }}
-        transition={{ type: "spring", damping: 25, stiffness: 80 }}
+        transition={{ type: "spring", damping: 30, stiffness: 90 }}
       >
         <Wallpaper />
-        <BroadcastMonitor />
+        
+        {/* Gallery Overlay - Subtle Architectural Grid */}
+        <div className="pointer-events-none absolute inset-0 z-0 opacity-[0.03]" 
+             style={{ backgroundImage: 'radial-gradient(#000 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
 
-        {/* Global "Computer Screen" DNA */}
-        <div className="pointer-events-none absolute inset-0 z-[1000] overflow-hidden opacity-[0.03]">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,black_100%)]" />
-          <div className="absolute inset-0 apex-grid-fine" />
-          {/* Scanlines */}
-          <div 
-            className="absolute inset-0 pointer-events-none opacity-20"
-            style={{
-              background: "repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(255,255,255,0.1) 2px, rgba(255,255,255,0.1) 3px)",
-              backgroundSize: "100% 4px"
-            }}
-          />
-        </div>
 
         <MenuBar
           focusedTitle={focusedTitle}

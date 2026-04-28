@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "framer-motion"
 import { Search, ArrowRight, Command } from "lucide-react"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { APPS, type AppId } from "@/lib/apex/apps"
+import { cn } from "@/lib/utils"
 
 type Suggestion = {
   id: AppId
@@ -19,27 +20,9 @@ type Props = {
 }
 
 const FAQ: { q: string; answer: string; route?: AppId }[] = [
-  {
-    q: "what is your roi",
-    answer:
-      "Average client ROI is 14× across 200+ projects with 98% retention.",
-    route: "about",
-  },
-  {
-    q: "how do you work",
-    answer: "Discover → Design → Build → Dominate. Open Process for the full system.",
-    route: "process",
-  },
-  {
-    q: "book a call",
-    answer: "Opening Contact — pick a slot or drop a brief.",
-    route: "contact",
-  },
-  {
-    q: "show me work",
-    answer: "Opening selected projects.",
-    route: "projects",
-  },
+  { q: "roi", answer: "Average ROI +14×. Open About for records.", route: "about" },
+  { q: "process", answer: "Open Process to see the Strategic Engine.", route: "process" },
+  { q: "book", answer: "Opening Contact interface.", route: "contact" },
 ]
 
 function fuzzyScore(query: string, target: string): number {
@@ -49,16 +32,7 @@ function fuzzyScore(query: string, target: string): number {
   if (t === q) return 100
   if (t.startsWith(q)) return 80
   if (t.includes(q)) return 60
-  // letter-by-letter
-  let qi = 0
-  let score = 0
-  for (let i = 0; i < t.length && qi < q.length; i++) {
-    if (t[i] === q[qi]) {
-      score += 2
-      qi++
-    }
-  }
-  return qi === q.length ? score : 0
+  return 0
 }
 
 export function SearchBar({ open, onClose, onCommand }: Props) {
@@ -68,7 +42,6 @@ export function SearchBar({ open, onClose, onCommand }: Props) {
   useEffect(() => {
     if (open) {
       setQuery("")
-      // delay focus until after motion paints
       requestAnimationFrame(() => inputRef.current?.focus())
     }
   }, [open])
@@ -91,56 +64,21 @@ export function SearchBar({ open, onClose, onCommand }: Props) {
       ]
     })
 
-    if (!q) {
-      return candidates
-        .sort((a, b) => a.label.localeCompare(b.label))
-        .map(({ score: _s, ...rest }) => rest)
-    }
+    if (!q) return candidates.sort((a, b) => a.label.localeCompare(b.label))
 
-    // command shortcuts: "open xxx", "launch xxx", "show xxx"
-    const cmdMatch = q.match(/^(?:open|launch|show|go to|goto|focus)\s+(.+)$/)
-    const target = cmdMatch ? cmdMatch[1] : q
-
-    candidates.forEach((c) => {
-      const app = APPS[c.id]
-      const targets = [app.name, ...app.aliases]
-      c.score = Math.max(...targets.map((t) => fuzzyScore(target, t)))
-      if (cmdMatch) c.score += 10
-    })
-
-    // FAQ overlay (highest priority on natural language matches)
-    const faq = FAQ.find((f) => target.includes(f.q.split(" ")[0]) && fuzzyScore(target, f.q) > 30)
-    const ranked = candidates
+    return candidates
       .filter((c) => c.score > 0)
       .sort((a, b) => b.score - a.score)
-      .slice(0, 6)
-      .map(({ score: _s, ...rest }) => rest)
-
-    if (faq && faq.route && !ranked.find((r) => r.id === faq.route)) {
-      ranked.unshift({
-        id: faq.route,
-        label: faq.answer,
-        hint: "answer · enter to open",
-        action: "open",
-      })
-    }
-    return ranked
+      .slice(0, 5)
   }, [query])
 
   useEffect(() => {
     if (!open) return
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        e.preventDefault()
+      if (e.key === "Escape") onClose()
+      if (e.key === "Enter" && suggestions[0]) {
+        onCommand(suggestions[0].id)
         onClose()
-      }
-      if (e.key === "Enter") {
-        const first = suggestions[0]
-        if (first) {
-          e.preventDefault()
-          onCommand(first.id)
-          onClose()
-        }
       }
     }
     window.addEventListener("keydown", onKey)
@@ -152,77 +90,73 @@ export function SearchBar({ open, onClose, onCommand }: Props) {
       {open && (
         <>
           <motion.div
-            key="backdrop"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="absolute inset-0 z-[300] bg-black/55 backdrop-blur-[2px]"
+            className="absolute inset-0 z-[300] bg-white/20 backdrop-blur-md"
           />
           <motion.div
-            key="panel"
-            initial={{ opacity: 0, y: -16, scale: 0.98 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -8, scale: 0.98 }}
-            transition={{ duration: 0.18, ease: "easeOut" }}
-            className="absolute left-1/2 top-20 z-[310] w-[min(620px,92vw)] -translate-x-1/2"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="absolute left-1/2 top-1/4 z-[310] w-[min(580px,92vw)] -translate-x-1/2"
           >
-            <div className="apex-chrome-glass overflow-hidden rounded-2xl shadow-2xl ring-1 ring-white/10">
-              <div className="flex items-center gap-4 border-b border-white/5 px-6 py-5">
-                <Search className="h-5 w-5 text-white/40" />
+            <div className="bg-white soft-shadow rounded-sm overflow-hidden border border-[#E5E5E0]">
+              <div className="flex items-center gap-5 px-8 py-6 border-b border-[#E5E5E0]">
+                <Search className="h-5 w-5 text-black opacity-30" />
                 <input
                   ref={inputRef}
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Summon any protocol..."
-                  className="flex-1 bg-transparent font-sans text-lg font-bold tracking-tight text-white placeholder:text-white/20 focus:outline-none"
-                  aria-label="Global search"
+                  placeholder="Summon protocol..."
+                  className="flex-1 bg-transparent font-sans text-xl font-bold tracking-tight text-black placeholder:text-black/10 focus:outline-none"
                 />
-                <kbd className="hidden items-center gap-1 rounded-sm border border-white/10 bg-white/[0.04] px-2 py-1 font-mono text-[9px] uppercase tracking-widest text-white/30 md:flex">
-                  <Command className="h-2.5 w-2.5" />K
-                </kbd>
+                <div className="flex items-center gap-2 font-mono text-[9px] font-bold text-black/20 uppercase tracking-widest bg-[#F5F5F0] px-3 py-1 border border-[#E5E5E0]">
+                   <Command className="h-2.5 w-2.5" /> <span>K</span>
+                </div>
               </div>
 
-              <ul className="max-h-[400px] overflow-y-auto apex-scroll p-2">
+              <ul className="p-3">
                 {suggestions.length === 0 && (
-                  <li className="px-6 py-10 text-center font-mono text-[10px] uppercase tracking-[0.3em] text-white/20">
-                    protocol not found // try "services"
+                  <li className="px-8 py-12 text-center font-mono text-[10px] uppercase tracking-[0.3em] text-black/20">
+                    Protocol_Not_Found // Try "Portfolio"
                   </li>
                 )}
                 {suggestions.map((s, i) => {
                   const app = APPS[s.id]
                   const Icon = app.icon
                   return (
-                    <li key={`${s.id}-${i}`}>
+                    <li key={s.id}>
                       <button
-                        type="button"
                         onClick={() => {
                           onCommand(s.id)
                           onClose()
                         }}
-                        className="group flex w-full items-center gap-4 rounded-xl px-4 py-3 text-left transition hover:bg-white/[0.08]"
+                        className="group flex w-full items-center gap-5 rounded-sm px-5 py-4 text-left hover:bg-[#F5F5F0] transition-colors"
                       >
-                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-black/40 text-white ring-1 ring-white/10 group-hover:ring-white/30 transition-shadow">
-                          <Icon className="h-5 w-5" style={{ color: app.tint }} />
+                        <div className="flex h-11 w-11 items-center justify-center bg-black text-white group-hover:scale-105 transition-transform">
+                          <Icon className="h-5 w-5" />
                         </div>
                         <div className="flex flex-1 flex-col">
-                          <span className="text-base font-bold tracking-tight text-white">{s.label}</span>
-                          <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/30">
+                          <span className="text-lg font-bold tracking-tight text-black flex items-center gap-3">
+                            {s.label}
+                            {i === 0 && <span className="text-[8px] font-mono bg-black text-white px-1.5 py-0.5 tracking-widest">BEST_MATCH</span>}
+                          </span>
+                          <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#666666] mt-1">
                             {s.hint}
                           </span>
                         </div>
-                        <div className="opacity-0 transform translate-x-2 transition-all group-hover:opacity-100 group-hover:translate-x-0">
-                           <ArrowRight className="h-4 w-4 text-white/40" />
-                        </div>
+                        <ArrowRight className="h-4 w-4 text-black opacity-0 group-hover:opacity-20 transition-opacity" />
                       </button>
                     </li>
                   )
                 })}
               </ul>
 
-              <div className="flex items-center justify-between border-t border-white/5 bg-black/40 px-6 py-3 font-mono text-[9px] uppercase tracking-[0.3em] text-white/20">
-                <span>Select protocol then click Enter</span>
-                <span className="text-white/40">ANTIGRAVITY APEX · LOCKED</span>
+              <div className="flex items-center justify-between bg-[#F5F5F0] px-8 py-3 font-mono text-[9px] uppercase tracking-[0.3em] text-black/30 border-t border-[#E5E5E0]">
+                <span>APEX_SYSTEM_QUERY</span>
+                <span className="font-bold">2024_INDEX</span>
               </div>
             </div>
           </motion.div>

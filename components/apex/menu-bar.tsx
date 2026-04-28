@@ -1,9 +1,10 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Wifi, Battery, Bluetooth, Search } from "lucide-react"
+import { Wifi, Battery, Search, Command } from "lucide-react"
+import { cn } from "@/lib/utils"
 
-const MENU_ITEMS = ["File", "Edit", "View", "Go", "Window", "Help"]
+const MENU_ITEMS = ["Portfolio", "Archive", "Studio", "Inquiry"]
 
 type Props = {
   focusedTitle: string
@@ -22,34 +23,28 @@ export function MenuBar({ focusedTitle, onOpenSearch }: Props) {
   const time = now
     ? now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
     : "--:--"
-  const date = now
-    ? now.toLocaleDateString([], {
-        weekday: "short",
-        month: "short",
-        day: "numeric",
-      })
-    : ""
 
   return (
     <div
-      className="absolute inset-x-0 top-0 z-[200] flex h-10 items-center justify-between apex-chrome-glass px-6 text-[10px] text-white/85 shadow-lg border-b border-white/5"
+      className={cn(
+        "absolute inset-x-0 top-0 z-[200] flex h-10 items-center justify-between px-6 border-b",
+        "bg-white/40 backdrop-blur-md border-[#E5E5E0] text-[10px] text-black"
+      )}
     >
       {/* Left — logo + menu */}
-      <div className="flex items-center gap-6 overflow-hidden">
-        <div className="flex items-center gap-2 shrink-0">
-          <div className="relative">
-             <div className="w-1.5 h-1.5 bg-red-600 rounded-full animate-pulse absolute -left-3 top-1/2 -translate-y-1/2" />
-             <span className="font-mono text-[10px] font-black uppercase tracking-[0.4em] text-white">
-               APEX_PRIMARY
-             </span>
+      <div className="flex items-center gap-8">
+        <div className="flex items-center gap-3">
+          <div className="w-4 h-4 bg-black flex items-center justify-center">
+             <span className="text-[10px] text-white font-black leading-none">A</span>
           </div>
+          <span className="font-bold uppercase tracking-[0.25em]">APEX® OS</span>
         </div>
-        <nav className="hidden items-center gap-4 border-l border-white/10 pl-6 md:flex">
+        
+        <nav className="hidden items-center gap-6 md:flex">
           {MENU_ITEMS.map((item) => (
             <button
               key={item}
-              type="button"
-              className="font-mono uppercase tracking-widest text-white/40 transition hover:text-white"
+              className="font-bold uppercase tracking-[0.15em] text-black/40 hover:text-black transition-colors"
             >
               {item}
             </button>
@@ -57,55 +52,37 @@ export function MenuBar({ focusedTitle, onOpenSearch }: Props) {
         </nav>
       </div>
 
-      {/* Center — Broadcast Ticker */}
-      <div className="flex-1 max-w-xl mx-8 overflow-hidden relative hidden lg:flex items-center gap-4 bg-black/20 h-6 px-4 rounded-sm border border-white/5">
-         <span className="font-mono text-[9px] font-bold text-emerald-500 shrink-0">LIVE_TICKER:</span>
-         <div className="flex gap-12 animate-marquee whitespace-nowrap font-mono text-[9px] text-white/40 tracking-[0.2em]">
-            <span>$APEX_CORE +14.2%</span>
-            <span>UPLINK_STABLE // SINGAPORE_NODE_ACTIVE</span>
-            <span>ROI_INDEX // 14X_TARGET_LOCKED</span>
-            <span>$DOMINANCE_INDEX +2.4%</span>
-            <span>SYSTEM_PULSE // NOMINAL</span>
-            <span>$APEX_CORE +14.2%</span>
-            <span>UPLINK_STABLE // SINGAPORE_NODE_ACTIVE</span>
-         </div>
+      {/* Center — Status Ticker */}
+      <div className="hidden lg:flex items-center gap-3 font-mono text-[9px] uppercase tracking-[0.3em] bg-black/5 px-4 h-6 rounded-sm">
+         <span className="opacity-30">SYSTEM_STATUS:</span>
+         <span className="font-bold">ALL_NODES_NOMINAL</span>
+         <div className="w-1 h-1 rounded-full bg-black animate-pulse" />
       </div>
 
-      {/* Right — system tray */}
-      <div className="flex items-center gap-4 text-white/70">
-        <div className="hidden xl:flex items-center gap-2 border-r border-white/10 pr-4 mr-2">
-           <span className="font-mono text-[9px] text-white/30 uppercase tracking-widest">Focused:</span>
-           <span className="font-mono text-[10px] text-white font-bold uppercase truncate max-w-[120px]">{focusedTitle}</span>
+      {/* Right — System Tray */}
+      <div className="flex items-center gap-6">
+        <div className="hidden xl:flex items-center gap-3">
+           <span className="font-mono text-[9px] text-black/20 uppercase tracking-[0.2em]">VIEW:</span>
+           <span className="font-bold uppercase truncate max-w-[150px] tracking-tight">{focusedTitle}</span>
         </div>
 
         <button
-          type="button"
           onClick={onOpenSearch}
-          className="flex items-center gap-2 rounded bg-white/5 border border-white/10 px-2 py-1 transition hover:bg-white/10"
+          className="flex items-center gap-3 hover:opacity-60 transition-opacity"
         >
           <Search className="h-3 w-3" />
-          <kbd className="font-mono text-[9px] text-white/40">⌘K</kbd>
+          <div className="flex items-center gap-1 opacity-20">
+             <Command className="h-2.5 w-2.5" />
+             <span className="font-bold">K</span>
+          </div>
         </button>
         
-        <div className="hidden md:flex items-center gap-3 ml-2">
-           <Wifi className="h-3 w-3" />
-           <Battery className="h-3.5 w-3.5" />
-           <span className="font-mono text-[10px] tracking-tighter text-white">{time}</span>
+        <div className="flex items-center gap-4 border-l border-black/10 pl-6 h-4">
+           <Wifi className="h-3 w-3 opacity-30" />
+           <Battery className="h-3.5 w-3.5 opacity-30" />
+           <span className="font-bold tracking-tighter">{time}</span>
         </div>
-
-        <div className="ml-2 w-5 h-5 flex items-center justify-center bg-white text-black font-black text-[10px]">A</div>
       </div>
-
-      <style jsx>{`
-        @keyframes marquee {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
-        }
-        .animate-marquee {
-          display: flex;
-          animation: marquee 30s linear infinite;
-        }
-      `}</style>
     </div>
   )
 }
