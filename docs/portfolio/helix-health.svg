@@ -1,0 +1,22 @@
+<svg width="1200" height="1200" viewBox="0 0 1200 1200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="g4" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#031d1f"/>
+      <stop offset="55%" stop-color="#0b3b42"/>
+      <stop offset="100%" stop-color="#22d3ee"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="1200" fill="url(#g4)"/>
+  <g fill="none" stroke="#ccfbf1" stroke-opacity="0.35">
+    <path d="M120 220H1080"/>
+    <path d="M120 360H1080"/>
+    <path d="M120 500H1080"/>
+    <path d="M120 640H1080"/>
+  </g>
+  <g fill="#cffafe" fill-opacity="0.2">
+    <rect x="160" y="170" width="210" height="80"/>
+    <rect x="390" y="170" width="300" height="80"/>
+    <rect x="710" y="170" width="310" height="80"/>
+  </g>
+  <text x="145" y="1030" fill="#ecfeff" font-family="'Arial Black', Arial" font-size="104" letter-spacing="8">HELIX HEALTH</text>
+</svg>

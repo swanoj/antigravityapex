@@ -1,6 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
+import { useEffect, useState } from "react"
 import { APPS, DESKTOP_APP_ORDER, type AppId } from "@/lib/apex/apps"
 
 type Props = {
@@ -8,6 +9,16 @@ type Props = {
 }
 
 export function DesktopIcons({ onOpen }: Props) {
+  const [isCoarsePointer, setIsCoarsePointer] = useState(false)
+
+  useEffect(() => {
+    const media = window.matchMedia("(pointer: coarse)")
+    const apply = () => setIsCoarsePointer(media.matches)
+    apply()
+    media.addEventListener?.("change", apply)
+    return () => media.removeEventListener?.("change", apply)
+  }, [])
+
   return (
     <div className="pointer-events-none absolute inset-0 z-10 px-6 pt-12 md:px-10 md:pt-14">
       <div
@@ -26,10 +37,7 @@ export function DesktopIcons({ onOpen }: Props) {
               onDoubleClick={() => onOpen(id)}
               onClick={(e) => {
                 if (e.detail === 2) return
-                // also support single click for touch-friendliness
-                if (e.detail === 1) {
-                  // do nothing on single click — selection only (visual)
-                }
+                if (e.detail === 1 && isCoarsePointer) onOpen(id)
               }}
               onKeyDown={(e) => {
                 if (e.key === "Enter" || e.key === " ") {

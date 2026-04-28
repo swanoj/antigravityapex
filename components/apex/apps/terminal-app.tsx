@@ -18,9 +18,14 @@ type Props = {
 
 const HELP: { cmd: string; desc: string }[] = [
   { cmd: "help, man", desc: "list available commands" },
-  { cmd: "open <app>", desc: "open about|services|process|projects|video|terminal|contact|settings" },
+  {
+    cmd: "open <app>",
+    desc: "open about|services|process|projects|video|terminal|contact|settings|insights|music|warroom|proof",
+  },
   { cmd: "stats", desc: "show key APEX metrics" },
+  { cmd: "status", desc: "show current system health status" },
   { cmd: "launch campaign", desc: "ignite a new campaign sequence" },
+  { cmd: "brief", desc: "open Proof Vault and latest outcomes" },
   { cmd: "windows", desc: "list currently open windows" },
   { cmd: "clear", desc: "clear the terminal buffer" },
   { cmd: "whoami", desc: "identify the operator" },
@@ -37,6 +42,10 @@ const APP_KEYS: Record<string, AppId> = {
   terminal: "terminal",
   contact: "contact",
   settings: "settings",
+  insights: "insights",
+  music: "music",
+  warroom: "warroom",
+  proof: "proof",
 }
 
 export function TerminalApp({ onCommand, openWindowsTitles }: Props) {
@@ -45,19 +54,6 @@ export function TerminalApp({ onCommand, openWindowsTitles }: Props) {
   const [history, setHistory] = useState<string[]>([])
   const [hIdx, setHIdx] = useState<number | null>(null)
   const [busy, setBusy] = useState(false)
-  
-  // Real-time uplink to system audio
-  const [audioState, setAudioState] = useState("IDLE")
-  const [location, setLocation] = useState("LOC_UNKNOWN")
-
-  useEffect(() => {
-    try {
-      const loc = new Intl.DateTimeFormat('en-US', { timeZoneName: 'short' }).format(new Date()).split(' ').pop() || "UTC"
-      setLocation(loc)
-    } catch (e) {
-      setLocation("UTC")
-    }
-  }, [])
   const scrollRef = useRef<HTMLDivElement | null>(null)
   const inputRef = useRef<HTMLInputElement | null>(null)
 
@@ -85,7 +81,7 @@ export function TerminalApp({ onCommand, openWindowsTitles }: Props) {
           <div className="my-1 space-y-0.5">
             <div className="text-[color:var(--apex-cyan)]">› apex commands</div>
             {HELP.map((h) => (
-              <div key={h.cmd} className="grid grid-cols-[200px_1fr] gap-2">
+              <div key={h.cmd} className="grid grid-cols-[260px_1fr] gap-2">
                 <span className="text-white">{h.cmd}</span>
                 <span className="text-white/50">{h.desc}</span>
               </div>
@@ -107,7 +103,7 @@ export function TerminalApp({ onCommand, openWindowsTitles }: Props) {
     }
 
     if (lower === "exit") {
-      onCommand("terminal") // toggle - parent handles close on second open? we'll just print.
+      onCommand("terminal")
       push({ kind: "out", text: "session closed. (press the red dot to fully exit)", tone: "muted" })
       return
     }
@@ -143,12 +139,30 @@ export function TerminalApp({ onCommand, openWindowsTitles }: Props) {
             <div className="mt-1 grid grid-cols-2 gap-x-4 gap-y-0.5 sm:grid-cols-4">
               {APEX_STATS.map((s) => (
                 <div key={s.label}>
-                  <div className="text-white/40 text-[10px] uppercase tracking-[0.18em]">
-                    {s.label}
-                  </div>
+                  <div className="text-white/40 text-[10px] uppercase tracking-[0.18em]">{s.label}</div>
                   <div className="text-white text-lg">{s.value}</div>
                 </div>
               ))}
+            </div>
+          </div>
+        ),
+      })
+      return
+    }
+
+    if (lower === "status") {
+      push({
+        kind: "block",
+        node: (
+          <div className="my-1">
+            <div className="text-[color:var(--apex-cyan)]">› apex system status</div>
+            <div className="mt-1 grid grid-cols-2 gap-x-6 gap-y-1 text-white/75 sm:grid-cols-3">
+              <div>signal integrity ........... 99.2%</div>
+              <div>creative velocity ........... online</div>
+              <div>deployment lanes ............ clear</div>
+              <div>paid media uplink ........... stable</div>
+              <div>reporting cadence ........... weekly</div>
+              <div>operator mode ............... precision</div>
             </div>
           </div>
         ),
@@ -167,17 +181,18 @@ export function TerminalApp({ onCommand, openWindowsTitles }: Props) {
       ]
       for (const s of seq) {
         await sleep(380)
-        push({
-          kind: "out",
-          text: s,
-          tone: s.startsWith("[") ? "orange" : "default",
-        })
+        push({ kind: "out", text: s, tone: s.startsWith("[") ? "orange" : "default" })
       }
       setBusy(false)
       return
     }
 
-    // open <app>
+    if (lower === "brief") {
+      push({ kind: "out", text: "› opening Proof Vault ...", tone: "cyan" })
+      onCommand("proof")
+      return
+    }
+
     const openMatch = lower.match(/^(?:open|launch|show|go to|goto|focus)\s+(.+)$/)
     if (openMatch) {
       const target = openMatch[1].trim()
@@ -189,13 +204,12 @@ export function TerminalApp({ onCommand, openWindowsTitles }: Props) {
       }
       push({
         kind: "out",
-        text: `unknown target "${target}". try: about, services, process, projects, video, terminal, contact, settings.`,
+        text: `unknown target "${target}". try: about, services, process, projects, video, terminal, contact, settings, insights, music, warroom, proof.`,
         tone: "err",
       })
       return
     }
 
-    // direct app name shortcuts
     if (APP_KEYS[lower]) {
       const id = APP_KEYS[lower]
       push({ kind: "out", text: `› opening ${APPS[id].name} ...`, tone: "cyan" })
@@ -224,8 +238,7 @@ export function TerminalApp({ onCommand, openWindowsTitles }: Props) {
     if (e.key === "ArrowUp") {
       e.preventDefault()
       if (history.length === 0) return
-      const next =
-        hIdx === null ? history.length - 1 : Math.max(0, hIdx - 1)
+      const next = hIdx === null ? history.length - 1 : Math.max(0, hIdx - 1)
       setHIdx(next)
       setInput(history[next])
     }
@@ -248,7 +261,6 @@ export function TerminalApp({ onCommand, openWindowsTitles }: Props) {
       className="relative h-full bg-[#0A0A0A] font-mono text-[11px] leading-snug text-white/90 selection:bg-white/20"
       onClick={() => inputRef.current?.focus()}
     >
-      {/* Hardware Overlays */}
       <div className="absolute inset-0 pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.05] z-0" />
       <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.1)_50%),linear-gradient(90deg,rgba(255,0,0,0.03),rgba(0,255,0,0.01),rgba(0,0,255,0.03))] bg-[length:100%_2px,3px_100%] z-0" />
 
@@ -265,16 +277,13 @@ export function TerminalApp({ onCommand, openWindowsTitles }: Props) {
                 <span className="text-white font-bold">{l.text}</span>
               </div>
             ) : l.kind === "out" ? (
-              <div className={cn("pl-4 border-l border-white/5", toneClass(l.tone))}>
-                {l.text}
-              </div>
+              <div className={cn("pl-4 border-l border-white/5", toneClass(l.tone))}>{l.text}</div>
             ) : (
               <div className="pl-4">{l.node}</div>
             )}
           </div>
         ))}
 
-        {/* prompt */}
         <div className="flex items-center gap-2 mt-4">
           <span className="text-emerald-500 animate-pulse select-none">●</span>
           <span className="text-white/20 select-none">›</span>
@@ -316,10 +325,16 @@ function toneClass(tone?: "default" | "cyan" | "orange" | "muted" | "ok" | "err"
 }
 
 function banner(): Line[] {
+  const tz =
+    Intl.DateTimeFormat("en-US", { timeZoneName: "short" })
+      .format(new Date())
+      .split(" ")
+      .pop() ?? "UTC"
+
   return [
     { kind: "out", text: " " },
-    { 
-      kind: "block", 
+    {
+      kind: "block",
       node: (
         <div className="font-black text-[10px] leading-tight text-white mb-4">
           <div>█████╗ ██████╗ ███████╗██╗  ██╗</div>
@@ -329,20 +344,20 @@ function banner(): Line[] {
           <div>██║  ██║██║     ███████╗██╔╝ ██╗</div>
           <div>╚═╝  ╚═╝╚═╝     ╚══════╝╚═╝  ╚═╝</div>
         </div>
-      )
+      ),
     },
     { kind: "out", text: "KERNEL_UPLINK_09 // STABLE", tone: "cyan" },
     { kind: "out", text: "SESSION_AUTH: OPERATOR_LEVEL_4", tone: "muted" },
     { kind: "out", text: " " },
-    { 
-      kind: "block", 
+    {
+      kind: "block",
       node: (
         <div className="flex gap-4 border-y border-white/5 py-2 my-2 font-mono text-[9px] uppercase tracking-widest text-white/40 overflow-hidden">
           <span className="text-cyan-400">AUDIO: CONNECTED</span>
           <span className="animate-pulse">SIGNAL: OPTIMAL</span>
-          <span>LOCATION: {location}</span>
+          <span>LOCATION: {tz}</span>
         </div>
-      )
+      ),
     },
   ]
 }

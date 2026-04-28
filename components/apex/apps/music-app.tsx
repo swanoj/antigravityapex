@@ -7,11 +7,7 @@ import {
   Pause, 
   SkipBack, 
   SkipForward, 
-  Volume2, 
-  Music, 
-  Settings2,
-  ListMusic,
-  Waveform
+  ListMusic
 } from "lucide-react"
 
 const TRACKS = [
@@ -67,16 +63,16 @@ export function MusicApp() {
   }, [])
 
   return (
-    <div className="bg-[#050505] h-full flex flex-col text-white font-sans selection:bg-purple-500/30">
+    <div className="bg-[#050505] h-full flex flex-col text-white font-sans selection:bg-cyan-500/30">
       {/* Header */}
       <div className="px-6 py-8 flex flex-col items-center">
         <div className="relative group">
           <motion.div 
             animate={isPlaying ? { scale: [1, 1.05, 1], rotate: [0, 5, -5, 0] } : {}}
             transition={{ repeat: Infinity, duration: 4 }}
-            className="w-48 h-48 bg-gradient-to-br from-purple-900 to-black border border-white/10 flex items-center justify-center relative overflow-hidden"
+            className="w-48 h-48 bg-gradient-to-br from-[#0c3a41] via-[#0b1e2d] to-black border border-white/10 flex items-center justify-center relative overflow-hidden"
           >
-            <Disc className="w-16 h-16 text-purple-400 opacity-20" />
+            <Disc className="w-16 h-16 text-cyan-300 opacity-25" />
             <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20" />
             
             {/* Animated Rings */}
@@ -87,13 +83,13 @@ export function MusicApp() {
                     initial={{ scale: 0, opacity: 0.5 }}
                     animate={{ scale: 2, opacity: 0 }}
                     transition={{ duration: 2, repeat: Infinity }}
-                    className="absolute inset-0 border border-purple-500/30 rounded-full"
+                    className="absolute inset-0 border border-cyan-400/35 rounded-full"
                   />
                   <motion.div 
                     initial={{ scale: 0, opacity: 0.5 }}
                     animate={{ scale: 2, opacity: 0 }}
                     transition={{ duration: 2, repeat: Infinity, delay: 1 }}
-                    className="absolute inset-0 border border-purple-500/30 rounded-full"
+                    className="absolute inset-0 border border-orange-400/30 rounded-full"
                   />
                 </>
               )}
@@ -105,7 +101,7 @@ export function MusicApp() {
           <h2 className="text-2xl font-black italic tracking-tighter uppercase leading-none">
             {currentTrack.title}
           </h2>
-          <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-purple-400 mt-2">
+          <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-cyan-300 mt-2">
             {currentTrack.artist}
           </p>
         </div>
@@ -124,7 +120,7 @@ export function MusicApp() {
               duration: 0.5 + Math.random(), 
               ease: "easeInOut" 
             }}
-            className="flex-1 bg-gradient-to-t from-purple-900 to-purple-400/50"
+            className="flex-1 bg-gradient-to-t from-[#1b4b58] via-cyan-400/70 to-orange-300/70"
           />
         ))}
       </div>
@@ -134,7 +130,7 @@ export function MusicApp() {
         {/* Progress Bar */}
         <div className="relative h-1 bg-white/5 rounded-full overflow-hidden mb-8">
           <motion.div 
-            className="absolute top-0 left-0 h-full bg-purple-500"
+            className="absolute top-0 left-0 h-full bg-gradient-to-r from-cyan-400 to-orange-400"
             style={{ width: `${progress}%` }}
           />
         </div>
@@ -160,7 +156,7 @@ export function MusicApp() {
       {/* Playlist */}
       <div className="mt-auto bg-white/5 p-6 border-t border-white/10 overflow-auto">
         <div className="flex items-center gap-2 mb-4">
-           <ListMusic size={14} className="text-purple-400" />
+           <ListMusic size={14} className="text-cyan-300" />
            <span className="font-mono text-[10px] uppercase tracking-widest text-white/40 italic">UPLINK_PLAYLIST</span>
         </div>
         <div className="space-y-1">
@@ -172,12 +168,12 @@ export function MusicApp() {
                 setIsPlaying(true)
               }}
               className={`w-full flex items-center justify-between p-3 rounded group transition-colors ${
-                currentTrack.id === t.id ? "bg-purple-900/40" : "hover:bg-white/5"
+                currentTrack.id === t.id ? "bg-cyan-700/20" : "hover:bg-white/5"
               }`}
             >
               <div className="flex flex-col items-start gap-1">
                 <span className={`text-[11px] font-bold tracking-tight uppercase ${
-                  currentTrack.id === t.id ? "text-purple-400" : "text-white/80"
+                  currentTrack.id === t.id ? "text-cyan-300" : "text-white/80"
                 }`}>
                   {t.title}
                 </span>

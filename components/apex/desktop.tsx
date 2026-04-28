@@ -23,6 +23,8 @@ import { ContactApp } from "./apps/contact-app"
 import { SettingsApp } from "./apps/settings-app"
 import { InsightsApp } from "./apps/insights-app"
 import { MusicApp } from "./apps/music-app"
+import { WarRoomApp } from "./apps/war-room-app"
+import { ProofVaultApp } from "./apps/proof-vault-app"
 
 export function Desktop() {
   const [booted, setBooted] = useState(false)
@@ -218,6 +220,10 @@ export function Desktop() {
         return <InsightsApp />
       case "music":
         return <MusicApp />
+      case "warroom":
+        return <WarRoomApp />
+      case "proof":
+        return <ProofVaultApp />
       default:
         return null
     }
@@ -253,6 +259,7 @@ export function Desktop() {
         <MenuBar
           focusedTitle={focusedTitle}
           onOpenSearch={() => setSearchOpen(true)}
+          onOpenApp={(id) => openApp(id)}
         />
 
         <DesktopIcons onOpen={openApp} />

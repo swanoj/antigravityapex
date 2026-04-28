@@ -21,7 +21,7 @@ export function Dock({ openApps, focusedApp, onOpen, onOpenSearch }: Props) {
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3, type: "spring", stiffness: 260, damping: 24 }}
-        className="pointer-events-auto flex items-end gap-2 bg-white/20 backdrop-blur-xl border border-[#E5E5E0] soft-shadow rounded-sm px-3 py-2"
+        className="pointer-events-auto flex max-w-[calc(100vw-1.5rem)] items-end gap-2 overflow-x-auto bg-white/20 backdrop-blur-xl border border-[#E5E5E0] soft-shadow rounded-sm px-3 py-2"
       >
         {DOCK_APP_ORDER.map((id) => {
           const app = APPS[id]

@@ -11,6 +11,8 @@ import {
   Search,
   BarChart3,
   Music,
+  Radar,
+  BadgeCheck,
 } from "lucide-react"
 
 export type AppId =
@@ -25,6 +27,8 @@ export type AppId =
   | "search"
   | "insights"
   | "music"
+  | "warroom"
+  | "proof"
 
 export type AppDefinition = {
   id: AppId
@@ -174,6 +178,28 @@ export const APPS: Record<AppId, AppDefinition> = {
     inDock: true,
     aliases: ["music", "audio", "pulse", "sound", "radio", "spotify"],
   },
+  warroom: {
+    id: "warroom",
+    name: "War Room",
+    subtitle: "Campaign command center",
+    icon: Radar,
+    tint: "#00F0FF",
+    defaultSize: { w: 980, h: 640 },
+    onDesktop: true,
+    inDock: true,
+    aliases: ["war room", "command", "campaign", "control", "operations"],
+  },
+  proof: {
+    id: "proof",
+    name: "Proof Vault",
+    subtitle: "Outcomes and trust signals",
+    icon: BadgeCheck,
+    tint: "#FF6B00",
+    defaultSize: { w: 920, h: 620 },
+    onDesktop: true,
+    inDock: true,
+    aliases: ["proof", "results", "reviews", "testimonials", "case proof"],
+  },
 }
 
 export const DESKTOP_APP_ORDER: AppId[] = [
@@ -186,6 +212,8 @@ export const DESKTOP_APP_ORDER: AppId[] = [
   "contact",
   "insights",
   "music",
+  "warroom",
+  "proof",
   "settings",
 ]
 
@@ -199,5 +227,7 @@ export const DOCK_APP_ORDER: AppId[] = [
   "search",
   "insights",
   "music",
+  "warroom",
+  "proof",
   "contact",
 ]

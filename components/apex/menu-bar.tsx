@@ -3,15 +3,22 @@
 import { useEffect, useState } from "react"
 import { Wifi, Battery, Search, Command } from "lucide-react"
 import { cn } from "@/lib/utils"
+import type { AppId } from "@/lib/apex/apps"
 
-const MENU_ITEMS = ["Portfolio", "Archive", "Studio", "Inquiry"]
+const MENU_ITEMS: { label: string; target: AppId }[] = [
+  { label: "Portfolio", target: "projects" },
+  { label: "Archive", target: "proof" },
+  { label: "Studio", target: "warroom" },
+  { label: "Inquiry", target: "contact" },
+]
 
 type Props = {
   focusedTitle: string
   onOpenSearch: () => void
+  onOpenApp: (id: AppId) => void
 }
 
-export function MenuBar({ focusedTitle, onOpenSearch }: Props) {
+export function MenuBar({ focusedTitle, onOpenSearch, onOpenApp }: Props) {
   const [now, setNow] = useState<Date | null>(null)
 
   useEffect(() => {
@@ -43,10 +50,11 @@ export function MenuBar({ focusedTitle, onOpenSearch }: Props) {
         <nav className="hidden items-center gap-6 md:flex">
           {MENU_ITEMS.map((item) => (
             <button
-              key={item}
+              key={item.label}
+              onClick={() => onOpenApp(item.target)}
               className="font-bold uppercase tracking-[0.15em] text-black/40 hover:text-black transition-colors"
             >
-              {item}
+              {item.label}
             </button>
           ))}
         </nav>

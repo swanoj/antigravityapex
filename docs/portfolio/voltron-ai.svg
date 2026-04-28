@@ -1,0 +1,20 @@
+<svg width="1600" height="1000" viewBox="0 0 1600 1000" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="g2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0b1020"/>
+      <stop offset="50%" stop-color="#1d2a5f"/>
+      <stop offset="100%" stop-color="#3b82f6"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="1000" fill="url(#g2)"/>
+  <g fill="none" stroke="#93c5fd" stroke-opacity="0.45">
+    <circle cx="320" cy="760" r="280"/>
+    <circle cx="1320" cy="220" r="240"/>
+  </g>
+  <g fill="#dbeafe" fill-opacity="0.25">
+    <rect x="130" y="130" width="260" height="160"/>
+    <rect x="430" y="130" width="580" height="160"/>
+    <rect x="130" y="320" width="880" height="120"/>
+  </g>
+  <text x="140" y="860" fill="#eff6ff" font-family="'Arial Black', Arial" font-size="122" letter-spacing="8">VOLTRON AI</text>
+</svg>

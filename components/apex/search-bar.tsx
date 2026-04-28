@@ -10,7 +10,7 @@ type Suggestion = {
   id: AppId
   label: string
   hint: string
-  action: "open" | "focus"
+  kind?: "intent" | "app"
 }
 
 type Props = {
@@ -23,6 +23,8 @@ const FAQ: { q: string; answer: string; route?: AppId }[] = [
   { q: "roi", answer: "Average ROI +14×. Open About for records.", route: "about" },
   { q: "process", answer: "Open Process to see the Strategic Engine.", route: "process" },
   { q: "book", answer: "Opening Contact interface.", route: "contact" },
+  { q: "campaign", answer: "Opening War Room command center.", route: "warroom" },
+  { q: "proof", answer: "Opening Proof Vault.", route: "proof" },
 ]
 
 function fuzzyScore(query: string, target: string): number {
@@ -50,7 +52,7 @@ export function SearchBar({ open, onClose, onCommand }: Props) {
     const q = query.trim().toLowerCase()
     const apps = Object.values(APPS).filter((a) => a.id !== "search")
 
-    const candidates = apps.flatMap((a) => {
+    const appMatches = apps.flatMap((a) => {
       const targets = [a.name, ...a.aliases]
       const best = Math.max(...targets.map((t) => fuzzyScore(q, t)))
       return [
@@ -58,18 +60,30 @@ export function SearchBar({ open, onClose, onCommand }: Props) {
           id: a.id,
           label: q ? `Open ${a.name}` : a.name,
           hint: a.subtitle,
-          action: "open" as const,
+          kind: "app" as const,
           score: best,
         },
       ]
     })
 
-    if (!q) return candidates.sort((a, b) => a.label.localeCompare(b.label))
+    const intentMatches = FAQ.map((f) => ({
+      id: f.route ?? "about",
+      label: q ? f.answer : `Quick: ${f.q}`,
+      hint: `Intent: ${f.q}`,
+      kind: "intent" as const,
+      score: fuzzyScore(q, f.q),
+    })).filter((intent) => intent.id)
 
-    return candidates
-      .filter((c) => c.score > 0)
+    if (!q) {
+      return [...appMatches, ...intentMatches]
+        .sort((a, b) => a.label.localeCompare(b.label))
+        .slice(0, 10)
+    }
+
+    return [...appMatches, ...intentMatches]
+      .filter((c) => c.score > 0 && c.id)
       .sort((a, b) => b.score - a.score)
-      .slice(0, 5)
+      .slice(0, 8)
   }, [query])
 
   useEffect(() => {
@@ -144,7 +158,7 @@ export function SearchBar({ open, onClose, onCommand }: Props) {
                             {i === 0 && <span className="text-[8px] font-mono bg-black text-white px-1.5 py-0.5 tracking-widest">BEST_MATCH</span>}
                           </span>
                           <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#666666] mt-1">
-                            {s.hint}
+                            {s.hint}{s.kind === "intent" ? " // Quick command" : ""}
                           </span>
                         </div>
                         <ArrowRight className="h-4 w-4 text-black opacity-0 group-hover:opacity-20 transition-opacity" />
@@ -156,7 +170,7 @@ export function SearchBar({ open, onClose, onCommand }: Props) {
 
               <div className="flex items-center justify-between bg-[#F5F5F0] px-8 py-3 font-mono text-[9px] uppercase tracking-[0.3em] text-black/30 border-t border-[#E5E5E0]">
                 <span>APEX_SYSTEM_QUERY</span>
-                <span className="font-bold">2024_INDEX</span>
+                <span className="font-bold">{new Date().getFullYear()}_INDEX</span>
               </div>
             </div>
           </motion.div>
