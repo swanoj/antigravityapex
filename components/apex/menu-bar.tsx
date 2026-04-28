@@ -50,7 +50,7 @@ export function MenuBar({ focusedTitle, onOpenSearch }: Props) {
             aria-hidden
           />
           <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.22em] text-white">
-            APEX
+            ANTIGRAVITY
           </span>
         </div>
         <nav className="hidden items-center gap-1 md:flex">

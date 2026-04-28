@@ -28,14 +28,14 @@ export function AboutApp() {
 
         <div className="relative">
           <span className="font-mono text-[10px] uppercase tracking-[0.32em] text-[color:var(--apex-cyan)]">
-            // about · apex digital
+            // about · ANTIGRAVITY
           </span>
           <h2 className="mt-4 max-w-2xl text-balance text-3xl font-semibold leading-[1.05] tracking-tight md:text-4xl">
             We Build. We Launch.{" "}
             <span className="apex-text-gradient">We Dominate.</span>
           </h2>
           <p className="mt-4 max-w-xl text-pretty text-sm leading-relaxed text-white/70">
-            APEX Digital is a full-spectrum digital consulting partner for
+            ANTIGRAVITY is an elite AI-native consulting engine for
             ambitious operators. One squad covering strategy, brand, video,
             engineering, media and AI — engineered around a single output:
             measurable dominance.

@@ -163,11 +163,11 @@ export const APEX_PROJECTS = [
 ] as const
 
 export const APEX_BOOT_LINES = [
-  "[ INITIALISING APEX MATRIX v4.0 ]",
+  "[ INITIALISING ANTIGRAVITY APEX MATRIX v4.0 ]",
   "loading kernel modules ........... ok",
   "mounting /strategy /creative /engineering ............ ok",
   "calibrating performance signals ........... ok",
   "syncing client intelligence layer ........... ok",
   "compiling dominance protocol ........... ok",
-  "[ SYSTEM READY — WELCOME OPERATOR ]",
+  "[ SYSTEM READY — WELCOME TO ANTIGRAVITY ]",
 ]
